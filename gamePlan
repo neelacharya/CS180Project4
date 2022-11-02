@@ -6,7 +6,10 @@
 
 - Marketplace
 
-- Shoe
+- Shoe:
+
+String name, String store, String description, int quantityAvailable, int price
+
 
 1 Interface:
 
