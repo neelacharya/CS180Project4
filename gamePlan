@@ -6,8 +6,25 @@
 
 - Marketplace
 
-- Product
+- Shoe
+
+1 Interface:
+
+- Buyable
 
 Choices so far: 
 
-- Restaurant
+- Shoe Store
+
+
+Neel
+- Working on Buyable Interface and Shoe class
+
+Suhani:
+- Working on seller class
+
+Zayed
+- Customer class
+
+Connor
+- Marketplace class -> Will need to wait for others to finish so I can see their code and create class
