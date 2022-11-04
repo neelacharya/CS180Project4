@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Shoes implements Buyable{
+public class Shoe implements Buyable{
     private String name;
     private ArrayList <String> store;
     private String description;
