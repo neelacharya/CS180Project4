@@ -5,6 +5,8 @@ public class Customers {
     public String customerReview;
 
     public String name;
+    
+    private ArrayList<Store> stores;
 
 
     public String getName() {
@@ -16,10 +18,12 @@ public class Customers {
     }
 
 
-
-    public ArrayList<Shoes> viewMarket() {
-        //When called, this method should print all the shoe options that are on the market.
-
+    public void viewMarket() {
+        for(int i = 0; i < this.stores.size(); i++){
+            for(int j = 0; j < stores.get(i).getProducts().size(); i++){
+                System.out.println("-------\n" + stores.get(i).getProducts().get(i).toString());
+            }
+        }
     }
 
     public ArrayList<String> sortShoes(String search) {
@@ -29,7 +33,6 @@ public class Customers {
     public ArrayList<String> sortByPrice(double price) {
 
     }
-
 
 
     public String setReviews(String name, String review, int rating) {
@@ -56,10 +59,4 @@ public class Customers {
     public ArrayList<String> shoppingCart() {
 
     }
-
-
-
-
-
-
 }
