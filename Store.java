@@ -51,7 +51,7 @@ public class Store {
                         System.out.println("There arent enough items in stock! you can order a max of " + products.get(i).getQuantity() + " items.");
                     }else {
                         products.get(i).setQuantity(products.get(i).getQuantity() - q);
-                        revenue = q * products.get(i).getPrice();
+                        revenue = revenue  + (q * products.get(i).getPrice());
                     }
                 }
             }
