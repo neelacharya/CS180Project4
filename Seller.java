@@ -53,7 +53,8 @@ public class Seller {
 
     public void viewStoreInfo(Store store) {
         /*
-
+        calls returnPurchase from store to log seller's 
+        selling details.
          */
     }
 }
