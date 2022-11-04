@@ -6,9 +6,9 @@ public interface Buyable {
 
     public ArrayList<String> getStore();
 
-    public void setStore(ArrayList<String> store);
+    //public void setStore(ArrayList<String> store);
 
-    public void addStore(String store);
+    //public void addStore(String store);
 
     public String getDescription();
 
