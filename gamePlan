@@ -31,3 +31,9 @@ Zayed
 
 Connor
 - Marketplace class -> Will need to wait for others to finish so I can see their code and create class
+
+
+
+
+
+Marketplace should have two methods. First the suer should be promtped for whether they are a buyer or a seller and then when they enter it, we call that specific method that gives them the required menu.
