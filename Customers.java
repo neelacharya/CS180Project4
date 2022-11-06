@@ -2,9 +2,17 @@ import java.util.ArrayList;
 
 public class Customers {
 
+    public Customers(String name) {
+        this.name = name;
+    }
+
     public String customerReview;
 
     public String name;
+
+    private ArrayList<Store> stores;
+
+    public ArrayList<Shoe> shoppingCart;
 
 
     public String getName() {
@@ -15,26 +23,37 @@ public class Customers {
         this.name = name;
     }
 
-
-
-    public ArrayList<Shoes> viewMarket() {
-        //When called, this method should print all the shoe options that are on the market.
-
+    //Done?
+    public void viewMarket() {
+        for(int i = 0; i < this.stores.size(); i++){
+            for(int j = 0; j < stores.get(i).getProducts().size(); i++){
+                System.out.println("-------\n" + stores.get(i).getProducts().get(i).toString());
+            }
+        }
     }
 
-    public ArrayList<String> sortShoes(String search) {
+    public ArrayList<Shoe> sortByStore(String search) {
+
+
+
         //returns an arraylist of all the shoes that contain the searched String.
     }
 
-    public ArrayList<String> sortByPrice(double price) {
+    public ArrayList<Shoe> sortByPrice(double price) {
+
+
 
     }
 
+    public ArrayList<Shoe> sortByDescription(String search) {
 
 
+    }
+
+    //Done
     public String setReviews(String name, String review, int rating) {
-        /*if the customer decides to leave a review they should be asked to rate the product out of 10, he will then
-        to provide a review as a String
+        /*if the customer decides to leave a review they should be asked to rate the product out of 10, they will then
+        be asked to provide a review as a String
          */
         String ratingString = String.valueOf(rating);
         String customerReview = name + ": " + ratingString + "; " + review;
@@ -42,24 +61,15 @@ public class Customers {
         return customerReview;
     }
 
+    //Done
     public String getReviews() {
         //Can be accessed by other customers or the product seller
         return customerReview;
     }
 
-    public ArrayList<String> customerHistory(String fileName) {
-        //If the customer has no history with the marketPlace, create a new file for him and add the purchases.
-        // If they already have a file append and add new purchases to it
 
+    //Done
+    public void shoppingCart(Shoe shoe) {
+        this.shoppingCart.add(shoe);
     }
-
-    public ArrayList<String> shoppingCart() {
-
-    }
-
-
-
-
-
-
 }
