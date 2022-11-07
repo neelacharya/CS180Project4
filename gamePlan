@@ -38,4 +38,7 @@ Our ReadMe:
 
 Step 1: Welcome screen. 
 
-Step 2: Sign-in or create account // each account stored in its file named as <email.txt> 
+Step 2: Sign-in or create account // each account stored in its file 
+
+NAME OF FILE ACCOUNTS ARE FORMATTED AS FOLLOWS -->> emailUntilThe@.txt
+eg: connorunderwear@gmail.com -> name would be: connorunderwear.txt
