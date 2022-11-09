@@ -1,23 +1,64 @@
 import java.util.Scanner;
 import java.io.*;
 public class Marketplace {
+    public static final String WELCOME_PROMPT = "Welcome to our Marketplace!";
+    public static final String EMAIL_PROMPT = "Please enter your email";
+    public static final String SIGN_IN_PROMPT = "1: Sign In\n2: Create an account";
+    public static final String PASSWORD_PROMPT = "Please enter a password greater than 5 characters:";
+
+
+
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Welcome to our Marketplace!");
-        System.out.println("1: Sign In\n2: Create an account");
+        System.out.println(WELCOME_PROMPT);
+        System.out.println(SIGN_IN_PROMPT);
         String response = scanner.nextLine();
 
-        if ("1".equals(response)) {
+        // global variables
+        boolean isSeller = true;
+        boolean isBuyer = true;
 
+        if ("1".equals(response)) {
+            System.out.println(EMAIL_PROMPT);
+            String email = scanner.nextLine();
+
+
+            System.out.println(PASSWORD_PROMPT);
+            String password = scanner.nextLine();
+
+            int index = email.indexOf("@");
+            String fileName = email.substring(0, index);
+            File f = new File(fileName);
+            if (f.exists()) {
+                try (BufferedReader bfr = new BufferedReader(new FileReader(fileName))) {
+                    String line = bfr.readLine();
+                    String[] accountInfo = line.split(",");
+                    if (accountInfo[2].equals(password)) {
+                        // correct password
+                    } else {
+                        // incorrect password
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("We have not detected an account in our system based on that information.");
+            }
+
+
+
+        } else {
             // ask for email
-            System.out.println("Please enter your email:");
+            System.out.println(EMAIL_PROMPT);
             String email = scanner.nextLine();
 
             // case of invalid email
             if (!email.contains("@")) {
                 boolean validEmail = false;
                 while (!validEmail) {
-                    System.out.println("Invalid Email. Please enter a valid Email:");
+                    System.out.println("Invalid Email. " + EMAIL_PROMPT);
                     email = scanner.nextLine();
                     if (email.contains("@")) {
                         validEmail = true;
@@ -45,18 +86,29 @@ public class Marketplace {
             System.out.println("1: Buyer\n2: Seller");
             String role = scanner.nextLine();
 
+            String buyerOrSeller = "";
+            if (role.equals("1")) {
+                // use this boolean variable later on. if buyer, make a buyer object
+                isBuyer = true;
+                buyerOrSeller = "Buyer";
+            } else {
+                // use this boolean variable later on. if seller, make a seller object
+                isSeller = true;
+                buyerOrSeller = "Seller";
+            }
+
             // make file based on the user's email
             int index = email.indexOf("@");
             String fileName = email.substring(0, index);
             File f = new File(fileName);
-        } else {
 
+            try (BufferedWriter bwr = new BufferedWriter(new FileWriter(f))) {
+                bwr.write(email + "," + password + "," + buyerOrSeller);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
-        // if 1, prompt for email and password, and create a specific file with that account
-
-
-        // if 2, check if file exists within our database
 
         /*
         Present our product listing page
@@ -72,4 +124,7 @@ public class Marketplace {
 
          */
     }
+
+
+
 }
