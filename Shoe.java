@@ -1,9 +1,23 @@
 import java.util.ArrayList;
 
-public class Shoe implements Buyable{
+public class Shoe extends Store {
     private String name;
-    private ArrayList <String> store;
+    private String store;
     private String description;
+    private ArrayList<String> review;
+
+    public ArrayList<String> getReview() {
+        return review;
+    }
+
+    public void setReview(ArrayList<String> review) {
+        this.review = review;
+    }
+
+    public void addReview(String rev){
+        review.add(rev);
+    }
+
     private int quantity;
     private double price;
 
@@ -15,17 +29,14 @@ public class Shoe implements Buyable{
         this.name = name;
     }
 
-    public ArrayList<String> getStore() {
-        return store;
+    public String getStore() {
+        return this.store;
     }
 
-    public void setStore(ArrayList<String> store) {
+    public void setStore(String store) {
         this.store = store;
     }
 
-    public void addStore(String store){
-        this.store.add(store);
-    }
 
     public String getDescription() {
         return description;
@@ -53,9 +64,12 @@ public class Shoe implements Buyable{
 
     @Override
     public String toString(){
-        String s = String.format("Name: %s\nQuantity: %d\nPrice: %.2f\nDescription: %s\nStores: ");
-        for(int i = 0; i < store.size(); i++){
-            s = s + store.get(i) + " ";
+        String s = String.format("Name: %s\nQuantity: %d\nPrice: %.2f\nDescription: %s\nStore: %s\n", this.name, this.quantity, this.description, this.store);
+        if(review != null){
+            s = s + "Reviews by customers: \n";
+            for(int i = 0; i < review.size(); i++){
+                s = s + review.get(i) + "\n";
+            }
         }
         return s;
     }
