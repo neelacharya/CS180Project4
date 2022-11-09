@@ -3,36 +3,36 @@ import java.util.ArrayList;
 public class Store {
     private String name;
     private ArrayList<Customers> customers;
-    private ArrayList<Shoe> products;
+    private ArrayList<Shoe> shoes;
     private ArrayList<String> sales;
 
 
-    public Store(String name, ArrayList<Customers> customers, ArrayList<Shoe> products) {
+    public Store(String name, ArrayList<Customers> customers, ArrayList<Shoe> shoes) {
         this.name = name;
         this.customers = customers;
-        this.products = products;
+        this.shoes = shoes;
         this.sales = new ArrayList<>();
     }
 
 
     public void addProduct(Shoe shoe) {
-        products.add(shoe);
+        shoes.add(shoe);
     }
 
     public void removeProduct(Shoe shoe) {
-        products.remove(shoe);
+        shoes.remove(shoe);
     }
 
     public void editProduct(Shoe shoe, Shoe newShoe) {
-        for(int i = 0; i < products.size(); i++){
-            if(products.get(i).equals(shoe)){
-                products.set(i, shoe);
+        for(int i = 0; i < shoes.size(); i++){
+            if(shoes.get(i).equals(shoe)){
+                shoes.set(i, shoe);
             }
         }
     }
 
     public void processPurchase(String shoeName, int quantity, Customers customer) {
-        for (Shoe shoe: products) {
+        for (Shoe shoe: shoes) {
             if (shoe.getName().equalsIgnoreCase(shoeName)) {
                 if (quantity <= shoe.getQuantity()) {
                     shoe.setQuantity(shoe.getQuantity() - quantity);
@@ -65,11 +65,11 @@ public class Store {
         this.customers = customers;
     }
     public ArrayList<Shoe> getProducts() {
-        return products;
+        return shoes;
     }
 
     public void setProducts(ArrayList<Shoe> products) {
-        this.products = products;
+        this.shoes = products;
     }
 
     public void setName(String name) {
