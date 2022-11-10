@@ -25,28 +25,53 @@ public class Customers {
 
     //Done?
     public void viewMarket() {
-        for(int i = 0; i < this.stores.size(); i++){
+        for (int i = 0; i < this.stores.size(); i++){
             for(int j = 0; j < stores.get(i).getProducts().size(); i++){
                 System.out.println("-------\n" + stores.get(i).getProducts().get(i).toString());
             }
         }
     }
 
-    public ArrayList<Shoe> sortByStore(String search) {
-
+    public ArrayList<Shoe> searchStore(String search) {
+        ArrayList<Shoe> shoes = new ArrayList<>();
+        for (int i = 0; i < stores.size(); i++) {
+            for (int j = 0; j < stores.get(i).getProducts().size(); j++) {
+                String s = stores.get(i).getProducts().get(j).getName().toLowerCase();
+                if (s.contains(search)) {
+                    shoes.add(stores.get(i).getProducts().get(j));
+                }
+            }
+        }
+        return shoes;
 
 
         //returns an arraylist of all the shoes that contain the searched String.
     }
 
-    public ArrayList<Shoe> sortByPrice(double price) {
-
-
-
+    public ArrayList<Shoe> searchByPrice(double price) {
+        ArrayList<Shoe> shoes = new ArrayList<>();
+        for (int i = 0; i < stores.size(); i++) {
+            for (int j = 0; j < stores.get(i).getProducts().size(); j++) {
+                double n = stores.get(i).getProducts().get(j).getPrice();
+                if (n < price) {
+                    shoes.add(stores.get(i).getProducts().get(j));
+                }
+            }
+        }
+        return shoes;
     }
 
-    public ArrayList<Shoe> sortByDescription(String search) {
-
+    public ArrayList<Shoe> searchByShoeType(String search) {
+        ArrayList<Shoe> shoes = new ArrayList<>();
+        for (int i = 0; i < stores.size(); i++) {
+            for (int j = 0; j < stores.get(i).getProducts().size(); j++) {
+                String s = stores.get(i).getProducts().get(j).getDescription().toLowerCase();
+                if (s.contains(search)) {
+                    shoes.add(stores.get(i).getProducts().get(j));
+                }
+            }
+        }
+        return shoes;
 
     }
 
@@ -69,7 +94,7 @@ public class Customers {
 
 
     //Done
-    public void shoppingCart(Shoe shoe) {
+    public void addToShoppingCart(Shoe shoe) {
         this.shoppingCart.add(shoe);
     }
 }
