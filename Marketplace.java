@@ -9,6 +9,7 @@ public class Marketplace {
     public static final String ENTER_YOUR_USERNAME = "Please enter your username";
     public static final String SIGN_IN_PROMPT = "1: Sign In\n2: Create an account";
     public static final String PASSWORD_PROMPT = "Please enter a password greater than 5 characters:";
+    public static final String BUYER_OR_SELLER = "1: Buyer\n2:Seller";
 
 
     public static void main(String[] args) {
