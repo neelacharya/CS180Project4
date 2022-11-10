@@ -3,7 +3,7 @@ import java.util.Scanner;
 import java.io.*;
 
 public class Marketplace {
-    ArrayList<String> userFiles = new ArrayList<>();
+    ArrayList<File> userFiles = new ArrayList<>();
 
     public static final String WELCOME_PROMPT = "Welcome to our Marketplace!";
     public static final String ENTER_YOUR_USERNAME = "Please enter your username";
