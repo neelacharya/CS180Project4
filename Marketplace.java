@@ -53,9 +53,31 @@ public class Marketplace {
             // ask for email
             System.out.println(ENTER_YOUR_USERNAME);
             String username = scanner.nextLine();
+            File f = new File(username);
 
-           
-           
+            boolean validUsername = false;
+            boolean badUsername = false;
+
+            while (!validUsername) { // re-prompt user if username is already taken
+                // {joe, moe, roe}
+                // username = "joe"
+                for (File userFile : userFiles) {
+                    if (userFile.getName().equals(f.getName())) {
+                        badUsername = true;
+                        break;
+                    }
+                }
+                if (badUsername) {
+                    System.out.println("This username has already been taken! Please enter a new one.");
+                    username = scanner.nextLine();
+                    f = new File(username);
+                } else {
+                    validUsername = true;
+                }
+            }
+            
+
+
 
             // ask for password
             System.out.println(PASSWORD_PROMPT);
@@ -72,9 +94,32 @@ public class Marketplace {
                     }
                 }
             }
+
+            System.out.println(BUYER_OR_SELLER);
+            String buyerOrSeller = scanner.nextLine();
+            boolean badResponse = true;
+            if (!"1".equals(buyerOrSeller) && !"2".equals(buyerOrSeller)) {
+                while (badResponse) {
+                    System.out.println("Please enter either a 1 or 2");
+                    buyerOrSeller = scanner.nextLine();
+                    if ("1".equals(buyerOrSeller) || "2".equals(buyerOrSeller)) {
+                        badResponse = false;
+                    }
+                }
+            }
+            String customerType = "";
             
+            if ("1".equals(buyerOrSeller)) {
+                customerType = "BUYER";
+            } else {
+                customerType = "SELLER";
+            } 
             
-            // connor start here
+            try (BufferedWriter bwr = new BufferedWriter(new FileWriter(f))) {
+                bwr.write(username + "," + password + "," + customerType);
+            } catch (IOException io) {
+                System.out.println("Could not write to the file");
+            }
         }
 
 
