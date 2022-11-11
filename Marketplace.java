@@ -23,6 +23,7 @@ public class Marketplace {
 
         while (!"1".equals(response) && !"2".equals(response)) {
             System.out.println("Please either select 1 or 2.");
+            response = scanner.nextLine();
         }
 
         String userType = "";
@@ -63,6 +64,14 @@ public class Marketplace {
                         userType = "CUSTOMER";
                     } else {
                         userType = "SELLER";
+                    }
+
+                    if (userType.equals("SELLER")) {
+                        System.out.println("WELCOME SELLER!");
+                        // seller viewing page
+                    } else {
+                        System.out.println("WELCOME CUSTOMER!");
+                        // customer viewing page
                     }
 
                 } catch (IOException io) {
@@ -129,26 +138,24 @@ public class Marketplace {
             } catch (IOException io) {
                 System.out.println();
             }
+
+            if (userType.equals("SELLER")) {
+                System.out.println("WELCOME SELLER!");
+                // seller viewing page
+            } else {
+                System.out.println("WELCOME CUSTOMER!");
+                // customer viewing page
+            }
         }
-        if (userType.equals("SELLER")) {
-            System.out.println("WELCOME SELLER!");
-            // seller viewing page
-        } else {
-            System.out.println("WELCOME CUSTOMER!");
-            // customer viewing page
-        }
+
         /*
         Present our product listing page
         format should be:
-
         store1, productName1, price1
         store2, productName2, price2
-
         The marketplace listing page will show the store, product name, and price of the available goods.
         Customers can select a specific product to be taken to that product's page, which will include a description and the quantity available.
         When items are purchased, the quantity available for all users decreases by the amount being purchased.
-
-
          */
 
 
