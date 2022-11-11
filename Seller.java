@@ -4,19 +4,18 @@ import java.util.ArrayList;
 
 public class Seller {
     private ArrayList<Store> stores;
-    private String name;
+    private String email;
 
-    public Seller(String name, ArrayList<Store> stores) {
-        this.name = name;
-        this.stores = stores;
+    public Seller(String email) {
+        this.email = email;
     }
 
-    public String getName() {
-        return name;
+    public String getEmail() {
+        return email;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.email = name;
     }
 
     public ArrayList<Store> getStores() {
@@ -58,7 +57,7 @@ public class Seller {
     public void viewStoreInfo() {
         ArrayList<String> sales;
         try {
-            PrintWriter printWriter = new PrintWriter(new FileWriter(name + ".txt"));
+            PrintWriter printWriter = new PrintWriter(new FileWriter(email));
             for (Store store: stores) {
                 printWriter.println("--------------------");
                 printWriter.println(store.getName());
