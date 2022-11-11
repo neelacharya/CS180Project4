@@ -3,24 +3,24 @@ import java.util.ArrayList;
 public class Customers {
 
     public Customers(String name) {
-        this.name = name;
+        this.email = name;
     }
 
     public String customerReview;
 
-    public String name;
+    public String email;
 
     private ArrayList<Store> stores;
 
     public ArrayList<Shoe> shoppingCart;
 
 
-    public String getName() {
-        return name;
+    public String getEmail() {
+        return email;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.email = name;
     }
 
     //Done?
