@@ -13,6 +13,9 @@ public class Store {
         this.shoes = shoes;
         this.sales = new ArrayList<>();
     }
+    public Store(String name){
+        this.name = name;
+    }
 
 
     public void addProduct(Shoe shoe) {
@@ -78,5 +81,12 @@ public class Store {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public String toString(){
+        //TODO
+        String s="";
+        return s;
     }
 }
