@@ -66,14 +66,6 @@ public class Marketplace {
                         userType = "SELLER";
                     }
 
-                    if (userType.equals("SELLER")) {
-                        System.out.println("WELCOME SELLER!");
-                        // seller viewing page
-                    } else {
-                        System.out.println("WELCOME CUSTOMER!");
-                        // customer viewing page
-                    }
-
                 } catch (IOException io) {
                     System.out.println();
                 }
@@ -139,15 +131,15 @@ public class Marketplace {
                 System.out.println();
             }
 
-            if (userType.equals("SELLER")) {
-                System.out.println("WELCOME SELLER!");
-                // seller viewing page
-            } else {
-                System.out.println("WELCOME CUSTOMER!");
-                // customer viewing page
-            }
-        }
 
+        }
+        if (userType.equals("SELLER")) {
+            System.out.println("WELCOME SELLER!");
+            // seller viewing page
+        } else if (userType.equals("CUSTOMER")){
+            System.out.println("WELCOME CUSTOMER!");
+            // customer viewing page
+        }
         /*
         Present our product listing page
         format should be:
