@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Scanner;
 import java.io.*;
@@ -95,9 +96,6 @@ public class Marketplace {
             }
 
 
-
-
-
             System.out.println(CREATE_PASSWORD_PROMPT);
             String password = scanner.nextLine();
 
@@ -133,10 +131,187 @@ public class Marketplace {
 
 
         }
+        String ch;
         if (userType.equals("SELLER")) {
             System.out.println("WELCOME SELLER!");
             // seller viewing page
-        } else if (userType.equals("CUSTOMER")){
+            String ch1;
+            do {
+                Seller seller = new Seller(email);
+                System.out.println("Menu");
+                System.out.println("1: Edit a Product");
+                System.out.println("2: Edit a Store");
+                System.out.println("3: View the store and its details");
+                System.out.println("4: Add a store");
+                System.out.println("5: Remove a Store");
+                int choice = scanner.nextInt();
+                scanner.nextLine();
+                switch (choice) {
+                    case 1:
+                        String c = "no";
+                        do {
+                            System.out.println("Enter the name of the Product you want to edit");
+                            String name = scanner.nextLine();
+                            for (int i = 0; i < seller.getStores().size(); i++) {
+                                for (int j = 0; j < seller.getStores().get(i).getProducts().size(); j++) {
+                                    if (seller.getStores().get(i).getProducts().get(j).getName().equals(name)) {
+                                        System.out.println("Editing Menu");
+                                        System.out.println("1: Edit the name");
+                                        System.out.println("2: Edit the price");
+                                        System.out.println("3: Edit the description");
+                                        System.out.println("4: Edit the quantity");
+                                        System.out.println("5: Edit the store");
+                                        int choice1 = scanner.nextInt();
+                                        scanner.nextLine();
+                                        String tempName = seller.getStores().get(i).getProducts().get(j).getName();
+                                        double tempPrice = seller.getStores().get(i).getProducts().get(j).getPrice();
+                                        int tempQuan = seller.getStores().get(i).getProducts().get(j).getQuantity();
+                                        String tempDes = seller.getStores().get(i).getProducts().get(j).getDescription();
+                                        String tempStore = seller.getStores().get(i).getProducts().get(j).getStore();
+                                        switch (choice1) {
+                                            case 1:
+                                                System.out.println("Enter the new name");
+                                                String newName = scanner.nextLine();
+                                                seller.getStores().get(i).getProducts().get(j).setName(newName);
+                                                break;
+                                            case 2:
+                                                System.out.println("Enter the new price");
+                                                double newPrice = scanner.nextDouble();
+                                                scanner.nextLine();
+                                                seller.getStores().get(i).getProducts().get(j).setPrice(newPrice);
+                                                break;
+                                            case 3:
+                                                System.out.println("Enter the new description");
+                                                String newDes = scanner.nextLine();
+                                                seller.getStores().get(i).getProducts().get(j).setDescription(newDes);
+                                                break;
+                                            case 4:
+                                                System.out.println("Enter the new Store");
+                                                String newStore = scanner.nextLine();
+                                                int co = 0;
+                                                for (int k = 0; k < seller.getStores().size(); k++) {
+                                                    if (seller.getStores().get(k).getName().equals(newStore)) {
+                                                        seller.getStores().get(k).addProduct(seller.getStores().get(i).getProducts().get(j));
+                                                        seller.getStores().get(i).getProducts().get(j).setStore(newStore);
+                                                        co = 1;
+                                                        break;
+                                                    }
+                                                }
+                                                if (co != 1) {
+                                                    System.out.println("Error! Please enter the new store before adding products to it!");
+                                                }
+                                                break;
+                                            default:
+                                                System.out.println("Error! Please enter a valid choice!");
+                                        }
+                                    } else {
+                                        System.out.println("Please add the product by editing the store. You cannot add products here");
+                                    }
+                                }
+                            }
+                            System.out.println("Do you want to edit more (y/n)?");
+                            c = scanner.nextLine();
+                        } while (c.equals("y") || c.equals("yes"));
+                    case 2:
+                        do {
+                            System.out.println("Enter the name of the store you want to edit");
+                            String editName = scanner.nextLine();
+                            for (int i = 0; i < seller.getStores().size(); i++) {
+                                if (seller.getStores().get(i).getName().equals(editName)) {
+                                    System.out.println("Edit Menu");
+                                    System.out.println("1: Change the name of the store");
+                                    System.out.println("2: Add a product to the store");
+                                    System.out.println("3: Remove a product from the store");
+                                    int choice2 = scanner.nextInt();
+                                    scanner.nextLine();
+                                    switch (choice2) {
+                                        case 1:
+                                            System.out.println("Enter the new name of the store");
+                                            String newName = scanner.nextLine();
+                                            seller.getStores().get(i).setName(newName);
+                                            break;
+                                        case 2:
+                                            System.out.println("Enter the name of the product");
+                                            String pName = scanner.nextLine();
+                                            System.out.println("Enter the price of the product");
+                                            double pPrice = scanner.nextDouble();
+                                            scanner.nextLine();
+                                            System.out.println("Enter the description of the product");
+                                            String pDes = scanner.nextLine();
+                                            System.out.println("Enter the quantity of the product");
+                                            int pQuan = scanner.nextInt();
+                                            scanner.nextLine();
+                                            Shoe shoe = new Shoe(pName, editName, pDes, pQuan, pPrice);
+                                            seller.getStores().get(i).addProduct(shoe);
+                                            break;
+                                        case 3:
+                                            System.out.println("Enter the name of the product that is to be removed");
+                                            String remName = scanner.nextLine();
+                                            for (int j = 0; j < seller.getStores().get(i).getProducts().size(); j++) {
+                                                if (seller.getStores().get(i).getProducts().get(i).getName().equals(remName)) {
+                                                    seller.getStores().get(i).removeProduct(seller.getStores().get(i).getProducts().get(i));
+                                                }
+                                            }
+                                            break;
+                                        default:
+                                            System.out.println("Please enter a valid choice");
+                                    }
+                                } else {
+                                    System.out.println("The store doesnt exist");
+                                }
+                            }
+                            System.out.println("Do you want to edit more stores?(y/n)");
+                            ch = scanner.nextLine();
+                        } while (ch.equals("y") || ch.equals("yes"));
+                        break;
+                    case 3:
+                        do {
+                            System.out.println("Enter the name of the store");
+                            String nameStore = scanner.nextLine();
+                            for (int i = 0; i < seller.getStores().size(); i++) {
+                                if (seller.getStores().get(i).equals(nameStore)) {
+                                    System.out.println(seller.getStores().get(i).toString());
+                                }
+                            }
+                            System.out.println("Would you like to view another store?");
+                            ch = scanner.nextLine();
+                        } while (ch.equals("y") || ch.equals("yes"));
+
+                        break;
+                    case 4:
+                        do {
+                            System.out.println("Enter the name of the store");
+                            String storeName = scanner.nextLine();
+                            Store store = new Store(storeName);
+                            seller.addStore(store);
+                            System.out.println("Do you want to add another store?(y/n)");
+                            ch = scanner.nextLine();
+                        } while (ch.equals("y") || ch.equals("yes"));
+
+                        break;
+                    case 5:
+                        do {
+                            System.out.println("Enter the name of the store you want to delete");
+                            String tbdelete = scanner.nextLine();
+                            for (int i = 0; i < seller.getStores().size(); i++) {
+                                if (seller.getStores().get(i).getName().equals(tbdelete)) {
+                                    seller.getStores().remove(seller.getStores().get(i));
+                                }
+                            }
+                            System.out.println("Would you like to delete another store?(y/n)");
+                            ch = scanner.nextLine();
+                        } while (ch.equals("y") || ch.equals("yes"));
+                        break;
+                    default:
+                        System.out.println("Please enter a valid choice!");
+                }
+                System.out.println("Would you like to perform any other activity?");
+                ch1 = scanner.nextLine();
+
+            } while (ch1.equals("y") || ch1.equals("yes"));
+
+
+        } else if (userType.equals("CUSTOMER")) {
             System.out.println("WELCOME CUSTOMER!");
             // customer viewing page
         }
