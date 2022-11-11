@@ -1,10 +1,18 @@
 import java.util.ArrayList;
 
-public class Shoe extends Store {
+public class Shoe {
     private String name;
     private String store;
     private String description;
     private ArrayList<String> review;
+
+    public Shoe(String name, String store, String description, int quantity, double price) {
+        this.name = name;
+        this.store = store;
+        this.description = description;
+        this.quantity = quantity;
+        this.price = price;
+    }
 
     public ArrayList<String> getReview() {
         return review;
