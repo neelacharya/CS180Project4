@@ -1,78 +1,76 @@
 import java.util.ArrayList;
+import java.io.*;
 
 public class Customers {
+    private ArrayList<Shoe> shoppingCart = new ArrayList<>();
 
     public Customers(String name) {
-        this.email = name;
+        this.name = name;
     }
 
     public String customerReview;
 
-    public String email;
+    public String name;
 
     private ArrayList<Store> stores;
 
-    public ArrayList<Shoe> shoppingCart;
 
+    public void viewCart(String name) throws IOException {
+        ArrayList<String> temp = new ArrayList<>();
+        File f = new File(name);
+        if (!f.isDirectory()) {
+            BufferedReader br = new BufferedReader(new FileReader(f));
+            boolean trip = false;
+            String line = br.readLine();
+            while (line != null) {
+                if(trip){
+                    temp.add(line);
+                }
+                if (line.equals("-------")) {
+                    trip = true;
+                }
+                
+                line = br.readLine();
+            }
+        }
+        for (int i = 0; i < temp.size(); i++){
+            System.out.println(temp.get(i) + "\n");
+        }
+            for (int i = 0; i < shoppingCart.size(); i++) {
+                System.out.println(shoppingCart.get(i).toString());
+            }
+    }
 
-    public String getEmail() {
-        return email;
+    public void addToCart(Shoe shoe) {
+        shoppingCart.add(shoe);
+    }
+
+    public void removeProduct(Shoe shoe) {
+        for (int i = 0; i < shoppingCart.size(); i++) {
+            if (shoppingCart.get(i).equals(shoe)) {
+                shoppingCart.remove(shoppingCart.get(i));
+            }
+        }
+    }
+
+    public void writeCart() throws IOException {
+        File f = new File(name);
+        if (!f.isDirectory()) {
+            PrintWriter pw = new PrintWriter(new FileOutputStream(f), true);
+            pw.append("Shopping cart: \n");
+            for (int i = 0; i < shoppingCart.size(); i++) {
+                pw.append(shoppingCart.get(i).toString());
+            }
+
+        }
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
-        this.email = name;
-    }
-
-    //Done?
-    public void viewMarket() {
-        for (int i = 0; i < this.stores.size(); i++){
-            for(int j = 0; j < stores.get(i).getProducts().size(); i++){
-                System.out.println("-------\n" + stores.get(i).getProducts().get(i).toString());
-            }
-        }
-    }
-
-    public ArrayList<Shoe> searchStore(String search) {
-        ArrayList<Shoe> shoes = new ArrayList<>();
-        for (int i = 0; i < stores.size(); i++) {
-            for (int j = 0; j < stores.get(i).getProducts().size(); j++) {
-                String s = stores.get(i).getProducts().get(j).getName().toLowerCase();
-                if (s.contains(search)) {
-                    shoes.add(stores.get(i).getProducts().get(j));
-                }
-            }
-        }
-        return shoes;
-
-
-        //returns an arraylist of all the shoes that contain the searched String.
-    }
-
-    public ArrayList<Shoe> searchByPrice(double price) {
-        ArrayList<Shoe> shoes = new ArrayList<>();
-        for (int i = 0; i < stores.size(); i++) {
-            for (int j = 0; j < stores.get(i).getProducts().size(); j++) {
-                double n = stores.get(i).getProducts().get(j).getPrice();
-                if (n < price) {
-                    shoes.add(stores.get(i).getProducts().get(j));
-                }
-            }
-        }
-        return shoes;
-    }
-
-    public ArrayList<Shoe> searchByShoeType(String search) {
-        ArrayList<Shoe> shoes = new ArrayList<>();
-        for (int i = 0; i < stores.size(); i++) {
-            for (int j = 0; j < stores.get(i).getProducts().size(); j++) {
-                String s = stores.get(i).getProducts().get(j).getDescription().toLowerCase();
-                if (s.contains(search)) {
-                    shoes.add(stores.get(i).getProducts().get(j));
-                }
-            }
-        }
-        return shoes;
-
+        this.name = name;
     }
 
     //Done
