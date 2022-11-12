@@ -2,11 +2,12 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class Seller {
-    private ArrayList<Store> stores = new ArrayList<>();
+    private ArrayList<Store> stores;
     private String email;
 
     public Seller(String email) {
         this.email = email;
+        this.stores = new ArrayList<>();
     }
 
     public String getEmail() {
@@ -21,9 +22,24 @@ public class Seller {
         return stores;
     }
 
-    public void addStores(Store store) {
-        this.stores.add(store);
+    public boolean addStores(Store store) {
+        if (stores.contains(store)) {
+            return false;
+        } else {
+            stores.add(store);
+            return true;
+        }
     }
+    public boolean removeStores(Store store) {
+        for (Store store1: stores) {
+            if (store1.equals(store)) {
+                stores.remove(store1);
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public void createProduct(Store store, Shoe shoe) {
         try (BufferedWriter bwr = new BufferedWriter(new FileWriter("market.txt", true))) {
