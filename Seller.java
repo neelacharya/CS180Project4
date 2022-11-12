@@ -25,6 +25,9 @@ public class Seller {
     public void setStores(ArrayList<Store> stores) {
         this.stores = stores;
     }
+    public void addStore(Store store){
+        stores.add(store);
+    }
 
     public void createProduct(Store store, Shoe shoe) {
         if (stores.contains(store)) {
