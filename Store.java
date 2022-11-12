@@ -39,6 +39,12 @@ public class Store {
         }
     }
 
+    public boolean equals(Object o) {
+        Store p = (Store) o;
+        return (p.name.equals(name) && p.shoes.equals(p.shoes) && p.customers.equals(customers) &&
+                p.sales.equals(sales));
+    }
+
     public void processPurchase(String shoeName, int quantity, Customers customer) {
         for (Shoe shoe: shoes) {
             if (shoe.getName().equalsIgnoreCase(shoeName)) {
