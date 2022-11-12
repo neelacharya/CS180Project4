@@ -1,3 +1,4 @@
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Objects;
@@ -14,6 +15,146 @@ public class Marketplace {
     public static final String CREATE_PASSWORD_PROMPT = "Please enter a password greater than 5 characters.";
 
     public static final String BUYER_OR_SELLER = "1: Customer\n2: Seller";
+
+//    public static void addToMarket() {
+//
+//    }
+    public static void sortByQuantity() {
+        try (BufferedReader bfr = new BufferedReader(new FileReader("market.txt"))) {
+            ArrayList<String> prices = new ArrayList<>();
+            String line = "";
+            while ((line = bfr.readLine()) != null) {
+                String[] arr = line.split(",");
+                int quantity = Integer.parseInt(arr[1]);
+                if (quantity != 0) {
+                    prices.add(line);
+                }
+            }
+            for (int i = 0; i < prices.size(); i++) {
+                    String s = prices.get(i).replaceAll(",", ", ");
+                    System.out.println("Product " + (i+1) + " " + s);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error searching the market.");
+        }
+
+    }
+
+    public static void searchByPrice(double threshold) {
+        try (BufferedReader bfr = new BufferedReader(new FileReader("market.txt"))) {
+            ArrayList<String> prices = new ArrayList<>();
+            String line = "";
+            while ((line = bfr.readLine()) != null) {
+                String[] arr = line.split(",");
+                double price = Double.parseDouble(arr[2]);
+                if (price < threshold) {
+                    prices.add(line);
+                }
+            }
+            if (prices.size() == 0) {
+                System.out.println("There were no matches to your search.");
+            } else {
+                for (int i = 0; i < prices.size(); i++) {
+                    String s = prices.get(i).replaceAll(",", ", ");
+                    System.out.println("Product " + (i+1) + " " + s);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error searching the market.");
+        }
+    }
+
+    public void searchByDescription(String description) {
+        try (BufferedReader bfr = new BufferedReader(new FileReader("market.txt"))) {
+            ArrayList<String> descriptions = new ArrayList<>();
+            String line = "";
+            while ((line = bfr.readLine()) != null) {
+                String[] arr = line.split(",");
+                if (arr[3].contains(description)) {
+                    descriptions.add(line);
+                }
+            }
+            if (descriptions.size() == 0) {
+                System.out.println("There were no matches to your search.");
+            } else {
+                for (int i = 0; i < descriptions.size(); i++) {
+                    String s = descriptions.get(i).replaceAll(",", ", ");
+                    System.out.println("Product " + (i+1) + " " + s);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error searching the market.");
+        }
+    }
+
+    public void searchByName(String name) {
+        try (BufferedReader bfr = new BufferedReader(new FileReader("market.txt"))) {
+            ArrayList<String> names = new ArrayList<>();
+            String line = "";
+            while ((line = bfr.readLine()) != null) {
+                String[] arr = line.split(",");
+                if (arr[0].contains(name)) {
+                    names.add(line);
+                }
+            }
+            if (names.size() == 0) {
+                System.out.println("There were no matches to your search.");
+            } else {
+                for (int i = 0; i < names.size(); i++) {
+                    String s = names.get(i).replaceAll(",", ", ");
+                    System.out.println("Product " + (i+1) + " " + s);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error searching the market.");
+        }
+    }
+
+    public void searchByStore(String store) {
+        try (BufferedReader bfr = new BufferedReader(new FileReader("market.txt"))) {
+            ArrayList<String> storeNames = new ArrayList<>();
+            String line = "";
+            while ((line = bfr.readLine()) != null) {
+                String[] arr = line.split(",");
+                if (arr[4].contains(store)) {
+                    storeNames.add(line);
+                }
+            }
+            if (storeNames.size() == 0) {
+                System.out.println("There were no matches to your search.");
+            } else {
+                for (int i = 0; i < storeNames.size(); i++) {
+                    String s = storeNames.get(i).replaceAll(",", ", ");
+                    System.out.println("Product " + (i+1) + " " + s);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error searching the market.");
+        }
+    }
+
+//    public static void removeFromMarket() {
+//
+//    }
+
+
+
+
+    public static void viewMarket() {
+        try (BufferedReader bfr = new BufferedReader(new FileReader("market.txt"))) {
+            String line = "";
+            ArrayList<String> overallProducts = new ArrayList<>();
+            while ((line = bfr.readLine()) != null) {
+                overallProducts.add(line);
+            }
+            for (int i = 0; i < overallProducts.size(); i++) {
+                System.out.println("Product " + (i + 1) + ":" + overallProducts.get(i));
+            }
+        } catch (Exception e) {
+            System.out.println();
+        }
+    }
 
 
     public static void main(String[] args) {
@@ -269,7 +410,7 @@ public class Marketplace {
                             System.out.println("Enter the name of the store");
                             String nameStore = scanner.nextLine();
                             for (int i = 0; i < seller.getStores().size(); i++) {
-                                if (seller.getStores().get(i).equals(nameStore)) {
+                                if (seller.getStores().get(i).getName().equals(nameStore)) {
                                     System.out.println(seller.getStores().get(i).toString());
                                 }
                             }
@@ -282,8 +423,8 @@ public class Marketplace {
                         do {
                             System.out.println("Enter the name of the store");
                             String storeName = scanner.nextLine();
-                            Store store = new Store(storeName);
-                            seller.addStore(store);
+//                            Store store = new Store(storeName);
+//                            seller.addStore(store);
                             System.out.println("Do you want to add another store?(y/n)");
                             ch = scanner.nextLine();
                         } while (ch.equals("y") || ch.equals("yes"));
