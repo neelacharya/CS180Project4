@@ -523,7 +523,7 @@ public class Marketplace {
                         viewMarket();
                         break;
                     default:
-                        System.out.println("Error! Wrong choice");
+                        System.out.println("Please enter a valid choice");
                         break;
                 }
 
