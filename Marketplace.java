@@ -294,12 +294,14 @@ public class Marketplace {
 
         }
         String ch;
+        String storeName;
+        Store store;
         if (userType.equals("SELLER")) {
             System.out.println("WELCOME SELLER!");
+            Seller seller = new Seller(email);
             // seller viewing page
             String ch1;
             do {
-                Seller seller = new Seller(email);
                 System.out.println("Menu");
                 System.out.println("1: Edit a Product");
                 System.out.println("2: Edit a Store");
@@ -441,33 +443,30 @@ public class Marketplace {
 
                         break;
                     case 4:
-                        do {
-                            System.out.println("Enter the name of the store");
-                            String storeName = scanner.nextLine();
-                            Store store = new Store(storeName);
-                            seller.addStores(store);
-                            System.out.println("Do you want to add another store?(y/n)");
-                            ch = scanner.nextLine();
-                        } while (ch.equals("y") || ch.equals("yes"));
+                        System.out.println("Enter the name of the store you would like to add:");
+                        storeName = scanner.nextLine();
+                        store = new Store(storeName);
+                        if (seller.addStores(store)) {
+                            System.out.println("Store has been added!");
 
+                        } else {
+                            System.out.println("Store already exists!");
+                        }
                         break;
                     case 5:
-                        do {
-                            System.out.println("Enter the name of the store you want to delete");
-                            String tbdelete = scanner.nextLine();
-                            for (int i = 0; i < seller.getStores().size(); i++) {
-                                if (seller.getStores().get(i).getName().equals(tbdelete)) {
-                                    seller.getStores().remove(seller.getStores().get(i));
-                                }
-                            }
-                            System.out.println("Would you like to delete another store?(y/n)");
-                            ch = scanner.nextLine();
-                        } while (ch.equals("y") || ch.equals("yes"));
+                        System.out.println("Enter the name of the store that you would like to remove:");
+                        storeName = scanner.nextLine();
+                        store = new Store(storeName);
+                        if (seller.removeStores(store)) {
+                            System.out.println("Store has been removed");
+                        } else {
+                            System.out.println("Store does not exist!");
+                        }
                         break;
                     default:
                         System.out.println("Please enter a valid choice!");
                 }
-                System.out.println("Would you like to perform any other activity?");
+                System.out.println("Would you like to perform any other activity?(y/n)");
                 ch1 = scanner.nextLine();
 
             } while (ch1.equals("y") || ch1.equals("yes"));
@@ -523,7 +522,7 @@ public class Marketplace {
                         viewMarket();
                         break;
                     default:
-                        System.out.println("Please enter a valid choice");
+                        System.out.println("Error! Wrong choice");
                         break;
                 }
 
