@@ -1,6 +1,4 @@
 import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Objects;
 import java.util.Scanner;
 import java.io.*;
 
@@ -71,7 +69,7 @@ public class Marketplace {
 
     }
 
-    public void searchByDescription(String description) {
+    public static void searchByDescription(String description) {
         File f = new File("market.txt");
         if (f.exists()) {
             try (BufferedReader bfr = new BufferedReader(new FileReader(f))) {
@@ -99,7 +97,7 @@ public class Marketplace {
         }
     }
 
-    public void searchByName(String name) {
+    public static void searchByName(String name) {
         File f = new File("market.txt");
         if (f.exists()) {
             try (BufferedReader bfr = new BufferedReader(new FileReader(f))) {
@@ -128,7 +126,7 @@ public class Marketplace {
 
     }
 
-    public void searchByStore(String store) {
+    public static void searchByStore(String store) {
         File f = new File("market.txt");
         if (f.exists()) {
             try (BufferedReader bfr = new BufferedReader(new FileReader(f))) {
@@ -485,7 +483,50 @@ public class Marketplace {
             int choice3 = scanner.nextInt();
             scanner.nextLine();
             switch (choice3){
-                case 1: System.out.println("Enter the term to search by");
+                case 1: System.out.println("On what basis would you like ro search by?");
+                System.out.println("1. NAME");
+                System.out.println("2. PRICE");
+                System.out.println("3. STORE");
+                System.out.println("4. DESCRIPTION");
+                System.out.println("5. QUANTITY");
+                System.out.println("6. NO FILTERS, VIEW ENTIRE MARKETPLACE");
+                int choice4 = scanner.nextInt();
+                scanner.nextLine();
+                switch (choice4) {
+                    case 1:
+                        System.out.println("What is the name of the product you wish to search by:");
+                        String searchName = scanner.nextLine();
+                        searchByName(searchName);
+                        break;
+                    case 2:
+                        System.out.println("What is the threshold price of your search?");
+                        double searchPrice = scanner.nextDouble();
+                        scanner.nextLine();
+                        searchByPrice(searchPrice);
+                        break;
+                    case 3:
+                        System.out.println("What is the name of the store you would like to search in?");
+                        String searchStore = scanner.nextLine();
+                        searchByStore(searchStore);
+                        break;
+                    case 4:
+                        System.out.println("What is the description of shoe you wish to purchase?");
+                        String searchDescription = scanner.nextLine();
+                        searchByDescription(searchDescription);
+                        break;
+                    case 5:
+                        System.out.println("Displaying all the in-stock products:");
+                        sortByQuantity();
+                        break;
+                    case 6:
+                        System.out.println("Displaying the entire marketplace:");
+                        viewMarket();
+                        break;
+                    default:
+                        System.out.println("Error! Wrong choice");
+                        break;
+                }
+
 
             }
             // customer viewing page
