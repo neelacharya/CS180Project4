@@ -19,119 +19,147 @@ public class Marketplace {
 //    public static void addToMarket() {
 //
 //    }
+
     public static void sortByQuantity() {
-        try (BufferedReader bfr = new BufferedReader(new FileReader("market.txt"))) {
-            ArrayList<String> prices = new ArrayList<>();
-            String line = "";
-            while ((line = bfr.readLine()) != null) {
-                String[] arr = line.split(",");
-                int quantity = Integer.parseInt(arr[1]);
-                if (quantity != 0) {
-                    prices.add(line);
+        File f = new File("market.txt");
+        if (f.exists()) {
+            try (BufferedReader bfr = new BufferedReader(new FileReader(f))) {
+                ArrayList<String> prices = new ArrayList<>();
+                String line = "";
+                while ((line = bfr.readLine()) != null) {
+                    String[] arr = line.split(",");
+                    int quantity = Integer.parseInt(arr[1]);
+                    if (quantity != 0) {
+                        prices.add(line);
+                    }
                 }
-            }
-            for (int i = 0; i < prices.size(); i++) {
-                    String s = prices.get(i).replaceAll(",", ", ");
-                    System.out.println("Product " + (i+1) + " " + s);
-            }
-
-        } catch (Exception e) {
-            System.out.println("Error searching the market.");
-        }
-
-    }
-
-    public static void searchByPrice(double threshold) {
-        try (BufferedReader bfr = new BufferedReader(new FileReader("market.txt"))) {
-            ArrayList<String> prices = new ArrayList<>();
-            String line = "";
-            while ((line = bfr.readLine()) != null) {
-                String[] arr = line.split(",");
-                double price = Double.parseDouble(arr[2]);
-                if (price < threshold) {
-                    prices.add(line);
-                }
-            }
-            if (prices.size() == 0) {
-                System.out.println("There were no matches to your search.");
-            } else {
                 for (int i = 0; i < prices.size(); i++) {
                     String s = prices.get(i).replaceAll(",", ", ");
                     System.out.println("Product " + (i+1) + " " + s);
                 }
+
+            } catch (Exception e) {
+                System.out.println("Error searching the market.");
             }
-        } catch (Exception e) {
-            System.out.println("Error searching the market.");
+        } else {
+            System.out.println("There are no products on the market.");
         }
     }
 
+    public static void searchByPrice(double threshold) {
+        File f = new File("market.txt");
+        if (f.exists()) {
+            try (BufferedReader bfr = new BufferedReader(new FileReader(f))) {
+                ArrayList<String> prices = new ArrayList<>();
+                String line = "";
+                while ((line = bfr.readLine()) != null) {
+                    String[] arr = line.split(",");
+                    double price = Double.parseDouble(arr[2]);
+                    if (price < threshold) {
+                        prices.add(line);
+                    }
+                }
+                if (prices.size() == 0) {
+                    System.out.println("There were no matches to your search.");
+                } else {
+                    for (int i = 0; i < prices.size(); i++) {
+                        String s = prices.get(i).replaceAll(",", ", ");
+                        System.out.println("Product " + (i+1) + " " + s);
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Error searching the market.");
+            }
+        } else {
+            System.out.println("There are no products on the market.");
+        }
+
+    }
+
     public void searchByDescription(String description) {
-        try (BufferedReader bfr = new BufferedReader(new FileReader("market.txt"))) {
-            ArrayList<String> descriptions = new ArrayList<>();
-            String line = "";
-            while ((line = bfr.readLine()) != null) {
-                String[] arr = line.split(",");
-                if (arr[3].contains(description)) {
-                    descriptions.add(line);
+        File f = new File("market.txt");
+        if (f.exists()) {
+            try (BufferedReader bfr = new BufferedReader(new FileReader(f))) {
+                ArrayList<String> descriptions = new ArrayList<>();
+                String line = "";
+                while ((line = bfr.readLine()) != null) {
+                    String[] arr = line.split(",");
+                    if (arr[3].contains(description)) {
+                        descriptions.add(line);
+                    }
                 }
-            }
-            if (descriptions.size() == 0) {
-                System.out.println("There were no matches to your search.");
-            } else {
-                for (int i = 0; i < descriptions.size(); i++) {
-                    String s = descriptions.get(i).replaceAll(",", ", ");
-                    System.out.println("Product " + (i+1) + " " + s);
+                if (descriptions.size() == 0) {
+                    System.out.println("There were no matches to your search.");
+                } else {
+                    for (int i = 0; i < descriptions.size(); i++) {
+                        String s = descriptions.get(i).replaceAll(",", ", ");
+                        System.out.println("Product " + (i+1) + " " + s);
+                    }
                 }
+            } catch (Exception e) {
+                System.out.println("Error searching the market.");
             }
-        } catch (Exception e) {
-            System.out.println("Error searching the market.");
+        } else {
+            System.out.println("There are no products on the market.");
         }
     }
 
     public void searchByName(String name) {
-        try (BufferedReader bfr = new BufferedReader(new FileReader("market.txt"))) {
-            ArrayList<String> names = new ArrayList<>();
-            String line = "";
-            while ((line = bfr.readLine()) != null) {
-                String[] arr = line.split(",");
-                if (arr[0].contains(name)) {
-                    names.add(line);
+        File f = new File("market.txt");
+        if (f.exists()) {
+            try (BufferedReader bfr = new BufferedReader(new FileReader(f))) {
+                ArrayList<String> names = new ArrayList<>();
+                String line = "";
+                while ((line = bfr.readLine()) != null) {
+                    String[] arr = line.split(",");
+                    if (arr[0].contains(name)) {
+                        names.add(line);
+                    }
                 }
-            }
-            if (names.size() == 0) {
-                System.out.println("There were no matches to your search.");
-            } else {
-                for (int i = 0; i < names.size(); i++) {
-                    String s = names.get(i).replaceAll(",", ", ");
-                    System.out.println("Product " + (i+1) + " " + s);
+                if (names.size() == 0) {
+                    System.out.println("There were no matches to your search.");
+                } else {
+                    for (int i = 0; i < names.size(); i++) {
+                        String s = names.get(i).replaceAll(",", ", ");
+                        System.out.println("Product " + (i+1) + " " + s);
+                    }
                 }
+            } catch (Exception e) {
+                System.out.println("Error searching the market.");
             }
-        } catch (Exception e) {
-            System.out.println("Error searching the market.");
+        } else {
+            System.out.println("There are no products on the market.");
         }
+
     }
 
     public void searchByStore(String store) {
-        try (BufferedReader bfr = new BufferedReader(new FileReader("market.txt"))) {
-            ArrayList<String> storeNames = new ArrayList<>();
-            String line = "";
-            while ((line = bfr.readLine()) != null) {
-                String[] arr = line.split(",");
-                if (arr[4].contains(store)) {
-                    storeNames.add(line);
+        File f = new File("market.txt");
+        if (f.exists()) {
+            try (BufferedReader bfr = new BufferedReader(new FileReader(f))) {
+                ArrayList<String> storeNames = new ArrayList<>();
+                String line = "";
+                while ((line = bfr.readLine()) != null) {
+                    String[] arr = line.split(",");
+                    if (arr[4].contains(store)) {
+                        storeNames.add(line);
+                    }
                 }
-            }
-            if (storeNames.size() == 0) {
-                System.out.println("There were no matches to your search.");
-            } else {
-                for (int i = 0; i < storeNames.size(); i++) {
-                    String s = storeNames.get(i).replaceAll(",", ", ");
-                    System.out.println("Product " + (i+1) + " " + s);
+                if (storeNames.size() == 0) {
+                    System.out.println("There were no matches to your search.");
+                } else {
+                    for (int i = 0; i < storeNames.size(); i++) {
+                        String s = storeNames.get(i).replaceAll(",", ", ");
+                        System.out.println("Product " + (i+1) + " " + s);
+                    }
                 }
+            } catch (Exception e) {
+                System.out.println("Error searching the market.");
             }
-        } catch (Exception e) {
-            System.out.println("Error searching the market.");
+        } else {
+            System.out.println("There are no products on the market.");
         }
+
     }
 
 //    public static void removeFromMarket() {
@@ -142,18 +170,24 @@ public class Marketplace {
 
 
     public static void viewMarket() {
-        try (BufferedReader bfr = new BufferedReader(new FileReader("market.txt"))) {
-            String line = "";
-            ArrayList<String> overallProducts = new ArrayList<>();
-            while ((line = bfr.readLine()) != null) {
-                overallProducts.add(line);
+        File f = new File("market.txt");
+        if (f.exists()) {
+            try (BufferedReader bfr = new BufferedReader(new FileReader(f))) {
+                String line = "";
+                ArrayList<String> overallProducts = new ArrayList<>();
+                while ((line = bfr.readLine()) != null) {
+                    overallProducts.add(line);
+                }
+                for (int i = 0; i < overallProducts.size(); i++) {
+                    System.out.println("Product " + (i + 1) + ":" + overallProducts.get(i));
+                }
+            } catch (Exception e) {
+                System.out.println();
             }
-            for (int i = 0; i < overallProducts.size(); i++) {
-                System.out.println("Product " + (i + 1) + ":" + overallProducts.get(i));
-            }
-        } catch (Exception e) {
-            System.out.println();
+        } else {
+            System.out.println("There are no products on the market.");
         }
+
     }
 
 
