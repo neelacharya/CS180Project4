@@ -4,20 +4,20 @@ import java.io.*;
 public class Customers {
     private ArrayList<Shoe> shoppingCart = new ArrayList<>();
 
-    public Customers(String name) {
-        this.name = name;
+    public Customers(String email) {
+        this.email = email;
     }
 
-    public String customerReview;
+    public String email;
 
-    public String name;
-
-    private ArrayList<Store> stores;
+    private ArrayList<String> previouslyPurchased;
 
 
-    public void viewCart(String name) throws IOException {
+
+
+    public void viewCart(String email) throws IOException {
         ArrayList<String> temp = new ArrayList<>();
-        File f = new File(name);
+        File f = new File(email);
         if (!f.isDirectory()) {
             BufferedReader br = new BufferedReader(new FileReader(f));
             boolean trip = false;
@@ -29,16 +29,16 @@ public class Customers {
                 if (line.equals("-------")) {
                     trip = true;
                 }
-                
+
                 line = br.readLine();
             }
         }
         for (int i = 0; i < temp.size(); i++){
             System.out.println(temp.get(i) + "\n");
         }
-            for (int i = 0; i < shoppingCart.size(); i++) {
-                System.out.println(shoppingCart.get(i).toString());
-            }
+        for (int i = 0; i < shoppingCart.size(); i++) {
+            System.out.println(shoppingCart.get(i).toString());
+        }
     }
 
     public void addToCart(Shoe shoe) {
@@ -54,7 +54,7 @@ public class Customers {
     }
 
     public void writeCart() throws IOException {
-        File f = new File(name);
+        File f = new File(email);
         if (!f.isDirectory()) {
             PrintWriter pw = new PrintWriter(new FileOutputStream(f), true);
             pw.append("Shopping cart: \n");
@@ -65,30 +65,19 @@ public class Customers {
         }
     }
 
-    public String getName() {
-        return name;
+    public String getEmail() {
+        return email;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    //Done
-    public String setReviews(String name, String review, int rating) {
-        /*if the customer decides to leave a review they should be asked to rate the product out of 10, they will then
-        be asked to provide a review as a String
-         */
-        String ratingString = String.valueOf(rating);
-        String customerReview = name + ": " + ratingString + "; " + review;
-
-        return customerReview;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     //Done
-    public String getReviews() {
-        //Can be accessed by other customers or the product seller
-        return customerReview;
-    }
+
+
+    //Done
+    
 
 
     //Done
