@@ -21,6 +21,14 @@ public class Seller {
         return stores;
     }
 
+    public boolean checkForStore(String storeName) {
+        for (Store store: stores) {
+            if (store.getName().equalsIgnoreCase(storeName)) {
+                return true;
+            }
+        }
+        return false;
+    }
     public boolean addStores(Store store) {
         if (stores.contains(store)) {
             return false;
@@ -29,7 +37,7 @@ public class Seller {
             return true;
         }
     }
-    
+
     public boolean removeStores(Store store) {
         for (Store store1: stores) {
             if (store1.equals(store)) {
@@ -100,10 +108,10 @@ public class Seller {
                     if (arr[4].equals(store.getName()) && arr[0].equalsIgnoreCase(shoe.getName())) {
                         marketProducts.add(newName + "," + arr[1] + "," + arr[2] + "," + arr[3] + "," + arr[4]);
                         marketProducts.remove(marketProducts.get(i));
-                        
+
                     }
                 }
-                
+
                 BufferedWriter bwr = new BufferedWriter(new FileWriter("market.txt"));
                 for (int i = 0; i < marketProducts.size(); i++) {
                     bwr.write(marketProducts.get(i));
@@ -114,7 +122,7 @@ public class Seller {
                 System.out.println("There was an error reading to the seller file.");
             }
         }
-        
+
     }
 
     public void editProductDescription(Store store, Shoe shoe, String newDesc) {
@@ -147,13 +155,93 @@ public class Seller {
             }
         }
     }
-    public void editProductPrice(double price) {
+    public void editProductPrice(Store store, Shoe shoe, double newPrice) {
+        if (!stores.contains(store)) {
+            System.out.println("You are not associated with " + store.getName());
+        } else {
+            try (BufferedReader bfr = new BufferedReader(new FileReader("market.txt"))) {
+                String line = "";
+                ArrayList<String> marketProducts = new ArrayList<>();
+                while ((line = bfr.readLine()) != null) {
+                    marketProducts.add(line);
+                }
+                for (int i = 0; i < marketProducts.size(); i++) {
+                    String[] arr = marketProducts.get(i).split(",");
+                    if (arr[0].equals(shoe.getName()) && arr[2].equalsIgnoreCase(shoe.getDescription())) {
+                        marketProducts.add(arr[0] + "," + arr[1] + "," + arr[2] + "," + newPrice + "," + arr[4]);
+                        marketProducts.remove(marketProducts.get(i));
+                    }
+                }
 
-    }
-    public void editProductQuantity(int quantity) {
+                BufferedWriter bwr = new BufferedWriter(new FileWriter("market.txt"));
+                for (int i = 0; i < marketProducts.size(); i++) {
+                    bwr.write(marketProducts.get(i));
+                }
 
+
+            } catch (IOException e) {
+                System.out.println("There was an error reading to the seller file.");
+            }
+        }
     }
-    public void editProductStore(String store) {
+    public void editProductQuantity(Shoe shoe, Store store, int newQuantity) {
+        if (!stores.contains(store)) {
+            System.out.println("You are not associated with " + store.getName());
+        } else {
+            try (BufferedReader bfr = new BufferedReader(new FileReader("market.txt"))) {
+                String line = "";
+                ArrayList<String> marketProducts = new ArrayList<>();
+                while ((line = bfr.readLine()) != null) {
+                    marketProducts.add(line);
+                }
+                for (int i = 0; i < marketProducts.size(); i++) {
+                    String[] arr = marketProducts.get(i).split(",");
+                    if (arr[0].equals(shoe.getName()) && arr[2].equalsIgnoreCase(shoe.getDescription())) {
+                        marketProducts.add(arr[0] + "," + arr[1] + "," + arr[2] + "," + newQuantity + "," + arr[4]);
+                        marketProducts.remove(marketProducts.get(i));
+                    }
+                }
+
+                BufferedWriter bwr = new BufferedWriter(new FileWriter("market.txt"));
+                for (int i = 0; i < marketProducts.size(); i++) {
+                    bwr.write(marketProducts.get(i));
+                }
+
+
+            } catch (IOException e) {
+                System.out.println("There was an error reading to the seller file.");
+            }
+        }
+    }
+    public void editProductStore(Shoe shoe, Store store, Store newStore) {
+        if (!stores.contains(store)) {
+            System.out.println("You are not associated with " + store.getName());
+        } else {
+            try (BufferedReader bfr = new BufferedReader(new FileReader("market.txt"))) {
+                String line = "";
+                ArrayList<String> marketProducts = new ArrayList<>();
+                while ((line = bfr.readLine()) != null) {
+                    marketProducts.add(line);
+                }
+                for (int i = 0; i < marketProducts.size(); i++) {
+                    String[] arr = marketProducts.get(i).split(",");
+                    if (arr[0].equals(shoe.getName()) && arr[2].equalsIgnoreCase(shoe.getDescription())) {
+                        marketProducts.add(arr[0] + "," + arr[1] + "," + arr[2] + "," + newStore.getName() + "," + arr[4]);
+                        removeProduct(store, shoe);
+                        createProduct(store, shoe);
+                        marketProducts.remove(marketProducts.get(i));
+                    }
+                }
+                BufferedWriter bwr = new BufferedWriter(new FileWriter("market.txt"));
+                for (int i = 0; i < marketProducts.size(); i++) {
+                    bwr.write(marketProducts.get(i));
+                }
+
+
+            } catch (IOException e) {
+                System.out.println("There was an error reading to the seller file.");
+            }
+        }
 
     }
 
