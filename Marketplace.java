@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.io.*;
 
@@ -12,6 +13,8 @@ public class Marketplace {
     public static final String CREATE_PASSWORD_PROMPT = "Please enter a password greater than 5 characters.";
 
     public static final String BUYER_OR_SELLER = "1: Customer\n2: Seller";
+
+    private static ArrayList<Seller> sellers = new ArrayList<>();
 
     public static void sortByQuantity() {
         File f = new File("market.txt");
@@ -28,7 +31,7 @@ public class Marketplace {
                 }
                 for (int i = 0; i < prices.size(); i++) {
                     String s = prices.get(i).replaceAll(",", ", ");
-                    System.out.println("Product " + (i+1) + " " + s);
+                    System.out.println("Product " + (i + 1) + " " + s);
                 }
 
             } catch (Exception e) {
@@ -57,7 +60,7 @@ public class Marketplace {
                 } else {
                     for (int i = 0; i < prices.size(); i++) {
                         String s = prices.get(i).replaceAll(",", ", ");
-                        System.out.println("Product " + (i+1) + " " + s);
+                        System.out.println("Product " + (i + 1) + " " + s);
                     }
                 }
             } catch (Exception e) {
@@ -86,7 +89,7 @@ public class Marketplace {
                 } else {
                     for (int i = 0; i < descriptions.size(); i++) {
                         String s = descriptions.get(i).replaceAll(",", ", ");
-                        System.out.println("Product " + (i+1) + " " + s);
+                        System.out.println("Product " + (i + 1) + " " + s);
                     }
                 }
             } catch (Exception e) {
@@ -114,7 +117,7 @@ public class Marketplace {
                 } else {
                     for (int i = 0; i < names.size(); i++) {
                         String s = names.get(i).replaceAll(",", ", ");
-                        System.out.println("Product " + (i+1) + " " + s);
+                        System.out.println("Product " + (i + 1) + " " + s);
                     }
                 }
             } catch (Exception e) {
@@ -143,7 +146,7 @@ public class Marketplace {
                 } else {
                     for (int i = 0; i < storeNames.size(); i++) {
                         String s = storeNames.get(i).replaceAll(",", ", ");
-                        System.out.println("Product " + (i+1) + " " + s);
+                        System.out.println("Product " + (i + 1) + " " + s);
                     }
                 }
             } catch (Exception e) {
@@ -175,6 +178,44 @@ public class Marketplace {
             System.out.println("There are no products on the market.");
         }
 
+    }
+
+    public static void loadMarket() {
+        File f = new File("Sellers.txt");
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(f));
+            String line = br.readLine();
+            while (line != null) {
+                Seller seller = new Seller(line);
+                line = br.readLine();
+                sellers.add(seller);
+            }
+
+            for (int i = 0; i < sellers.size(); i++) {
+                BufferedReader bfr = new BufferedReader(new FileReader(sellers.get(i).getEmail()));
+                String line1 = bfr.readLine();
+                while (line1 != null) {
+                    if (line1.startsWith("Store Name:")) {
+                        String[] temp = line1.split(",");
+                        Store store = new Store(temp[0]);
+                        sellers.get(i).addStores(store);
+                    }
+                    if (line1.startsWith("Name:")) {
+                        String[] temp1 = line1.split(",");
+                        Shoe shoe = new Shoe(temp1[0], Integer.parseInt(temp1[1]), Double.parseDouble(temp1[2]), temp1[3], temp1[4]);
+                        for (int k = 0; k < sellers.get(i).getStores().size(); i++) {
+                            if (sellers.get(i).getStores().get(k).getName().equals(temp1[4])) {
+                                sellers.get(i).getStores().get(k).addProduct(shoe);
+                            }
+                        }
+                    }
+                }
+                bfr.close();
+            }
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -257,6 +298,13 @@ public class Marketplace {
 
             }
 
+            File file = new File("Sellers.txt");
+            try {
+                PrintWriter pw = new PrintWriter(new FileWriter(file, true));
+                pw.append(email + "\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             System.out.println(CREATE_PASSWORD_PROMPT);
             String password = scanner.nextLine();
@@ -337,7 +385,7 @@ public class Marketplace {
                                     System.out.println("5. Shift to a different store:");
                                     int choice1 = scanner.nextInt();
                                     scanner.nextLine();
-                                    switch(choice1) {
+                                    switch (choice1) {
                                         case 1:
                                             System.out.println("Enter the new name of the product:");
                                             String newName = scanner.nextLine();
@@ -406,7 +454,7 @@ public class Marketplace {
                                             System.out.println("Enter the quantity of the product");
                                             int pQuan = scanner.nextInt();
                                             scanner.nextLine();
-                                            Shoe shoe = new Shoe(pName, editName, pDes, pQuan, pPrice);
+                                            Shoe shoe = new Shoe(pName, pQuan, pPrice, pDes, editName);
                                             seller.getStores().get(i).addProduct(shoe);
                                             break;
                                         case 3:
@@ -480,10 +528,12 @@ public class Marketplace {
             System.out.println("1: Search the market and the various products it has to offer");
             System.out.println("2: View your shopping cart");
             System.out.println("3: View your purchase history");
+            System.out.println("4: Enter a review for a product you have purchased");
             int choice3 = scanner.nextInt();
             scanner.nextLine();
-            switch (choice3){
-                case 1: System.out.println("On what basis would you like ro search by?");
+            switch (choice3) {
+                case 1:
+                    System.out.println("On what basis would you like ro search by?");
                     System.out.println("1. NAME");
                     System.out.println("2. PRICE");
                     System.out.println("3. STORE");
@@ -525,6 +575,144 @@ public class Marketplace {
                         default:
                             System.out.println("Please enter a valid choice!");
                             break;
+                    }
+                    break;
+                case 2:
+                    customer.viewCart(customer.email);
+                    System.out.println("Shopping Cart Menu");
+                    System.out.println("1: Checkout");
+                    System.out.println("2: Add item to the shopping cart");
+                    int choice5 = scanner.nextInt();
+                    scanner.nextLine();
+                    switch (choice5) {
+                        case 1:
+                            try {
+                                BufferedReader br = new BufferedReader(new FileReader(email));
+                                ArrayList<String> lines = new ArrayList<>();
+                                ArrayList<String> cart = new ArrayList<>();
+                                String line = scanner.nextLine();
+                                boolean trip = false;
+                                while (line != null) {
+                                    lines.add(line);
+                                    if (line.equals("-------")) {
+                                        trip = true;
+                                    }
+                                    if (trip) {
+                                        cart.add(line);
+                                    }
+                                }
+                                ArrayList<Shoe> passCart = new ArrayList<>();
+                                for (int i = 0; i < cart.size(); i++) {
+                                    String[] temp = cart.get(i).split(",");
+                                    Shoe shoe = new Shoe(temp[0], Integer.parseInt(temp[1]), Double.parseDouble(temp[2]), temp[3], temp[4]);
+                                    passCart.add(shoe);
+                                }
+                                for (int i = 0; i < passCart.size(); i++) {
+                                    for (int j = 0; j < sellers.size(); j++) {
+                                        for (int k = 0; k < sellers.get(i).getStores().size(); k++) {
+                                            if (sellers.get(i).getStores().get(k).equals(passCart.get(i).getStore())) {
+                                                sellers.get(i).getStores().get(k).processPurchase(passCart.get(i).getName(), passCart.get(i).getQuantity(), customer);
+                                            }
+                                        }
+                                    }
+                                }
+                                boolean trip1 = false;
+                                PrintWriter pw = new PrintWriter(new FileWriter(customer.getEmail(), true));
+                                for (int i = 0; i < lines.size(); i++) {
+                                    if (lines.get(i).equals("-------")) {
+                                        trip1 = true;
+                                    }
+                                    if (!trip1) {
+                                        pw.append(lines.get(i));
+                                    }
+                                }
+                                for (int i = 0; i < passCart.size(); i++) {
+                                    pw.append(passCart.get(i).toString());
+                                }
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                        case 2:
+                            System.out.println("Enter the name of the item you wish to add to the cart");
+                            String item = scanner.nextLine();
+
+                            for (int i = 0; i < sellers.size(); i++) {
+                                for (int j = 0; j < sellers.get(i).getStores().size(); j++) {
+                                    for (int k = 0; k < sellers.get(i).getStores().get(i).getProducts().size(); k++) {
+                                        if (sellers.get(i).getStores().get(i).getProducts().get(k).getName().equals(item)) {
+                                            customer.addToCart(sellers.get(i).getStores().get(i).getProducts().get(k));
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        default:
+                            System.out.println("Enter a valid choice!");
+                    }
+                case 3:
+                    try {
+                        BufferedReader br = new BufferedReader(new FileReader(customer.getEmail()));
+                        System.out.println(customer.getEmail() + "'s purchase history: \n");
+                        String line = br.readLine();
+                        boolean trip = false;
+                        while ((line = br.readLine()) != null) {
+                            if (line.equals("-------")) {
+                                trip = true;
+                            }
+                            if (!trip) {
+                                System.out.println(line);
+                            }
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 4:
+                    System.out.println("Enter the name of the product whose review you want to give");
+                    String productName = scanner.nextLine();
+                    System.out.println("Enter the name of the store you bought it from");
+                    String storebought = scanner.nextLine();
+                    try {
+                        int a=0,b=0,c=0;
+                        boolean trip = false;
+                        BufferedReader br = new BufferedReader(new FileReader(customer.getEmail()));
+                        String line2 = br.readLine();
+                        while(line2 != null){
+                            String[] temp = line2.split(",");
+                            if(temp[0].equals("Name: " + productName) && temp[4].equals("Store: " + storebought)){
+                                trip = true;
+                            }
+                            if(trip){
+                                System.out.println("Enter the review you would like to send");
+                                String review = scanner.nextLine();
+
+                                for(int i = 0; i < sellers.size(); i++){
+                                    for(int j = 0; j < sellers.get(i).getStores().size(); j++){
+                                        for(int k = 0; k < sellers.get(i).getStores().get(i).getProducts().size(); k++){
+                                            if(sellers.get(i).getStores().get(i).getProducts().get(i).getName().equals(productName) && sellers.get(i).getStores().get(i).getProducts().get(i).getStore().equals(storebought)){
+                                                sellers.get(i).getStores().get(i).getProducts().get(i).addReview(customer.getEmail(), review);
+                                                a = i;
+                                                b = j;
+                                                c = k;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+
+                        if(!trip){
+                            System.out.println("You havent bought that product!!");
+                        } else {
+                            PrintWriter pw = new PrintWriter(new FileWriter(sellers.get(a).getEmail()));
+                            //TODO: PUT THE IMPLEMENTATION FOR UPDATING THE SELLER FILE HERE
+                        }
+                    } catch (IOException e){
+                        e.printStackTrace();
                     }
 
 
