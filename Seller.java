@@ -21,7 +21,7 @@ public class Seller {
         return stores;
     }
 
-    public boolean checkForStore(String storeName) {
+    public boolean checkIfStoreExists(String storeName) {
         for (Store store: stores) {
             if (store.getName().equalsIgnoreCase(storeName)) {
                 return true;
