@@ -224,7 +224,7 @@ public class Marketplace {
         System.out.println(WELCOME_PROMPT);
         System.out.println(SIGN_IN_PROMPT);
         String response = scanner.nextLine();
-
+        loadMarket();
         while (!"1".equals(response) && !"2".equals(response)) {
             System.out.println("Please either select 1 or 2.");
             response = scanner.nextLine();
