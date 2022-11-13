@@ -637,15 +637,22 @@ public class Marketplace {
                         case 2:
                             System.out.println("Enter the name of the item you wish to add to the cart");
                             String item = scanner.nextLine();
-
+                            System.out.println("Enter the name of the sstore you wish to purchase it from");
+                            String addStore = scanner.nextLine();
+                            int co2 = 0;
                             for (int i = 0; i < sellers.size(); i++) {
                                 for (int j = 0; j < sellers.get(i).getStores().size(); j++) {
                                     for (int k = 0; k < sellers.get(i).getStores().get(i).getProducts().size(); k++) {
-                                        if (sellers.get(i).getStores().get(i).getProducts().get(k).getName().equals(item)) {
+                                        if (sellers.get(i).getStores().get(i).getProducts().get(k).getName().equals(item) && sellers.get(i).getStores().get(i).getProducts().get(k).getStore().equals(addStore)) {
                                             customer.addToCart(sellers.get(i).getStores().get(i).getProducts().get(k));
+                                            co2 = 1;
+                                            customer.writeCart();
                                         }
                                     }
                                 }
+                            }
+                            if(co2 == 0){
+                                System.out.println("This item does not exist!");
                             }
                             break;
                         default:
@@ -722,7 +729,7 @@ public class Marketplace {
                             bfr.close();
                         }
                         br.close();
-                        
+
                     } catch (IOException e){
                         e.printStackTrace();
                     }
