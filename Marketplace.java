@@ -183,35 +183,41 @@ public class Marketplace {
         File f = new File("Sellers.txt");
         try {
             BufferedReader br = new BufferedReader(new FileReader(f));
-            String line = br.readLine();
-            while (line != null) {
+            String line = "";
+            while ((line = br.readLine()) != null) {
                 Seller seller = new Seller(line);
-                line = br.readLine();
                 sellers.add(seller);
             }
             br.close();
-
-            for (int i = 0; i < sellers.size(); i++) {
-                BufferedReader bfr = new BufferedReader(new FileReader(sellers.get(i).getEmail()));
-                String line1 = "";
-                while ((line1 = bfr.readLine()) != null) {
-                    if (line1.startsWith("Store Name:")) {
-                        String[] temp = line1.split(":");
-                        Store store = new Store(temp[1].trim());
-                        sellers.get(i).addStores(store);
-                    }
-                    if (line1.startsWith("Product")) {
-                        String[] temp1 = line1.split(",");
-                        Shoe shoe = new Shoe(temp1[1], Integer.parseInt(temp1[2]), Double.parseDouble(temp1[3]), temp1[4], temp1[5]);
-                        for (int k = 0; k < sellers.get(i).getStores().size(); i++) {
-                            if (sellers.get(i).getStores().get(k).getName().equals(temp1[5])) {
-                                sellers.get(i).getStores().get(k).addProduct(shoe);
+            System.out.println(sellers.size());
+            if (sellers.size() != 0) {
+                for (int i = 0; i < sellers.size(); i++) {
+                    BufferedReader bfr = new BufferedReader(new FileReader(sellers.get(i).getEmail()));
+                    String line1 = "";
+                    Seller p = new Seller(sellers.get(i).getEmail());
+                    Store store = new Store("");
+                    while ((line1 = bfr.readLine()) != null) {
+                        if (line1.startsWith("Store Name:")) {
+                            if (!store.getName().equals("")) {
+                                p.addStores(store);
                             }
+                            String[] temp = line1.split(":");
+                            store = new Store(temp[1].trim());
+                        }
+                        if (line1.startsWith("Product")) {
+                            String[] temp1 = line1.split(",");
+                            Shoe shoe = new Shoe(temp1[1], Integer.parseInt(temp1[2]), Double.parseDouble(temp1[3]), temp1[4], temp1[5]);
+                            store.addProduct(shoe);
                         }
                     }
+                    sellers.set(i, p);
+                    bfr.close();
                 }
-                bfr.close();
             }
+
+
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -333,6 +339,8 @@ public class Marketplace {
                 userType = "CUSTOMER";
             } else {
                 userType = "SELLER";
+                Seller seller = new Seller(email);
+                sellers.add(seller); // hope it works
             }
 
 
@@ -343,18 +351,21 @@ public class Marketplace {
             }
 
 
+
         }
         String ch;
         String storeName;
         Store store;
-        Seller seller = null;
         if (userType.equals("SELLER")) {
-            System.out.println("WELCOME SELLER!");
+            int index = 0;
             for (int i = 0; i < sellers.size(); i++) {
                 if (sellers.get(i).getEmail().equalsIgnoreCase(email)) {
-                    seller = new Seller(sellers.get(i).getEmail());
+                    index = i;
+                    break;
                 }
             }
+
+            System.out.println("WELCOME SELLER!");
             // seller viewing page
             String ch1;
             do {
@@ -373,11 +384,11 @@ public class Marketplace {
                             System.out.println("Enter the name of the Product you want to edit");
                             String name = scanner.nextLine();
                             System.out.println("In which store would you like to edit the product?");
-                            for (int i = 0; i < seller.getStores().size(); i++) {
-                                System.out.println(seller.getStores().get(i).getName());
+                            for (int i = 0; i < sellers.get(index).getStores().size(); i++) {
+                                System.out.println(sellers.get(index).getStores().get(i).getName());
                             }
                             String selectedStore = scanner.nextLine();
-                            if (!seller.checkIfStoreExists(selectedStore)) {
+                            if (!sellers.get(index).checkIfStoreExists(selectedStore)) {
                                 System.out.println("You are not associated with " + selectedStore);
                             } else {
                                 Store storeToEdit = new Store(selectedStore);
@@ -397,32 +408,32 @@ public class Marketplace {
                                         case 1:
                                             System.out.println("Enter the new name of the product:");
                                             String newName = scanner.nextLine();
-                                            seller.editProductName(storeToEdit, shoeToEdit, newName);
+                                            sellers.get(index).editProductName(storeToEdit, shoeToEdit, newName);
                                             break;
                                         case 2:
                                             System.out.println("Enter the new description:");
                                             String newDescription = scanner.nextLine();
-                                            seller.editProductDescription(storeToEdit, shoeToEdit, newDescription);
+                                            sellers.get(index).editProductDescription(storeToEdit, shoeToEdit, newDescription);
                                             break;
                                         case 3:
                                             System.out.println("Enter the new quantity:");
                                             int newQuantity = scanner.nextInt();
                                             scanner.nextLine();
-                                            seller.editProductQuantity(shoeToEdit, storeToEdit, newQuantity);
+                                            sellers.get(index).editProductQuantity(shoeToEdit, storeToEdit, newQuantity);
                                             break;
                                         case 4:
                                             System.out.println("Enter the new price:");
                                             double newPrice = scanner.nextDouble();
                                             scanner.nextLine();
-                                            seller.editProductPrice(storeToEdit, shoeToEdit, newPrice);
+                                            sellers.get(index).editProductPrice(storeToEdit, shoeToEdit, newPrice);
                                         case 5:
                                             System.out.println("Enter the name of the store you want to shift to:");
                                             String newStoreName = scanner.nextLine();
-                                            if (!seller.checkIfStoreExists(newStoreName)) {
+                                            if (!sellers.get(index).checkIfStoreExists(newStoreName)) {
                                                 System.out.println("You are not associated with " + newStoreName);
                                             } else {
                                                 Store newStore = new Store(newStoreName);
-                                                seller.editProductStore(shoeToEdit, storeToEdit, newStore);
+                                                sellers.get(index).editProductStore(shoeToEdit, storeToEdit, newStore);
                                             }
                                             break;
                                         default:
@@ -437,8 +448,8 @@ public class Marketplace {
                         do {
                             System.out.println("Enter the name of the store you want to edit");
                             String editName = scanner.nextLine();
-                            for (int i = 0; i < seller.getStores().size(); i++) {
-                                if (seller.getStores().get(i).getName().equals(editName)) {
+                            for (int i = 0; i < sellers.get(index).getStores().size(); i++) {
+                                if (sellers.get(index).getStores().get(i).getName().equals(editName)) {
                                     System.out.println("Edit Menu");
                                     System.out.println("1: Change the name of the store");
                                     System.out.println("2: Add a product to the store");
@@ -449,7 +460,7 @@ public class Marketplace {
                                         case 1:
                                             System.out.println("Enter the new name of the store");
                                             String newName = scanner.nextLine();
-                                            seller.getStores().get(i).setName(newName);
+                                            sellers.get(index).getStores().get(i).setName(newName);
                                             break;
                                         case 2:
                                             System.out.println("Enter the name of the product");
@@ -463,14 +474,14 @@ public class Marketplace {
                                             int pQuan = scanner.nextInt();
                                             scanner.nextLine();
                                             Shoe shoe = new Shoe(pName, pQuan, pPrice, pDes, editName);
-                                            seller.getStores().get(i).addProduct(shoe);
+                                            sellers.get(index).getStores().get(i).addProduct(shoe);
                                             break;
                                         case 3:
                                             System.out.println("Enter the name of the product that is to be removed");
                                             String remName = scanner.nextLine();
-                                            for (int j = 0; j < seller.getStores().get(i).getProducts().size(); j++) {
-                                                if (seller.getStores().get(i).getProducts().get(i).getName().equals(remName)) {
-                                                    seller.getStores().get(i).removeProduct(seller.getStores().get(i).getProducts().get(i));
+                                            for (int j = 0; j < sellers.get(index).getStores().get(i).getProducts().size(); j++) {
+                                                if (sellers.get(index).getStores().get(i).getProducts().get(i).getName().equals(remName)) {
+                                                    sellers.get(index).getStores().get(i).removeProduct(sellers.get(index).getStores().get(i).getProducts().get(i));
                                                 }
                                             }
                                             break;
@@ -489,9 +500,9 @@ public class Marketplace {
                         do {
                             System.out.println("Enter the name of the store");
                             String nameStore = scanner.nextLine();
-                            for (int i = 0; i < seller.getStores().size(); i++) {
-                                if (seller.getStores().get(i).equals(nameStore)) {
-                                    System.out.println(seller.getStores().get(i).toString());
+                            for (int i = 0; i < sellers.get(index).getStores().size(); i++) {
+                                if (sellers.get(index).getStores().get(i).getName().equals(nameStore)) {
+                                    System.out.println(sellers.get(index).getStores().get(i).toString());
                                 }
                             }
                             System.out.println("Would you like to view another store?");
@@ -503,10 +514,10 @@ public class Marketplace {
                         System.out.println("Enter the name of the store you would like to add:");
                         storeName = scanner.nextLine();
                         store = new Store(storeName);
-                        if (seller.checkIfStoreExists(store.getName())) {
+                        if (sellers.get(index).checkIfStoreExists(store.getName())) {
                             System.out.println("Store already exists!");
                         } else {
-                            seller.addStores(store);
+                            sellers.get(index).addStores(store);
                             System.out.println("Store has been added!");
                         }
                         break;
@@ -514,8 +525,8 @@ public class Marketplace {
                         System.out.println("Enter the name of the store that you would like to remove:");
                         storeName = scanner.nextLine();
                         store = new Store(storeName);
-                        if (seller.checkIfStoreExists(store.getName())) {
-                            seller.removeStores(store);
+                        if (sellers.get(index).checkIfStoreExists(store.getName())) {
+                            sellers.get(index).removeStores(store);
                             System.out.println("Store has been removed");
                         } else {
                             System.out.println("Store does not exist!");
@@ -528,7 +539,7 @@ public class Marketplace {
                 ch1 = scanner.nextLine();
 
             } while (ch1.equals("y") || ch1.equals("yes"));
-
+            // end of seller implementation...
 
         } else if (userType.equals("CUSTOMER")) {
             System.out.println("WELCOME CUSTOMER!");
