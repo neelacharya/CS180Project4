@@ -13,31 +13,33 @@ public class Customers {
     private ArrayList<String> previouslyPurchased;
 
 
-
-
-    public void viewCart(String email) throws IOException {
+    public void viewCart(String email) {
         ArrayList<String> temp = new ArrayList<>();
-        File f = new File(email);
-        if (!f.isDirectory()) {
-            BufferedReader br = new BufferedReader(new FileReader(f));
-            boolean trip = false;
-            String line = br.readLine();
-            while (line != null) {
-                if(trip){
-                    temp.add(line);
-                }
-                if (line.equals("-------")) {
-                    trip = true;
-                }
+        try {
+            File f = new File(email);
+            if (!f.isDirectory()) {
+                BufferedReader br = new BufferedReader(new FileReader(f));
+                boolean trip = false;
+                String line = br.readLine();
+                while (line != null) {
+                    if (trip) {
+                        temp.add(line);
+                    }
+                    if (line.equals("-------")) {
+                        trip = true;
+                    }
 
-                line = br.readLine();
+                    line = br.readLine();
+                }
             }
-        }
-        for (int i = 0; i < temp.size(); i++){
-            System.out.println(temp.get(i) + "\n");
-        }
-        for (int i = 0; i < shoppingCart.size(); i++) {
-            System.out.println(shoppingCart.get(i).toString());
+            for (int i = 0; i < temp.size(); i++) {
+                System.out.println(temp.get(i) + "\n");
+            }
+            for (int i = 0; i < shoppingCart.size(); i++) {
+                System.out.println(shoppingCart.get(i).toString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -53,15 +55,19 @@ public class Customers {
         }
     }
 
-    public void writeCart() throws IOException {
-        File f = new File(email);
-        if (!f.isDirectory()) {
-            PrintWriter pw = new PrintWriter(new FileOutputStream(f), true);
-            pw.append("Shopping cart: \n");
-            for (int i = 0; i < shoppingCart.size(); i++) {
-                pw.append(shoppingCart.get(i).toString());
-            }
+    public void writeCart() {
+        try {
+            File f = new File(email);
+            if (!f.isDirectory()) {
+                PrintWriter pw = new PrintWriter(new FileOutputStream(f), true);
+                pw.append("Shopping cart: \n");
+                for (int i = 0; i < shoppingCart.size(); i++) {
+                    pw.append(shoppingCart.get(i).toString());
+                }
 
+            }
+        } catch (IOException e){
+            e.printStackTrace();
         }
     }
 
@@ -77,7 +83,6 @@ public class Customers {
 
 
     //Done
-    
 
 
     //Done
