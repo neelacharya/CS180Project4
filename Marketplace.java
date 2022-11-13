@@ -224,7 +224,10 @@ public class Marketplace {
         System.out.println(WELCOME_PROMPT);
         System.out.println(SIGN_IN_PROMPT);
         String response = scanner.nextLine();
-        loadMarket();
+        File f = new File("Sellers.txt");
+        if(f.exists()) {
+            loadMarket();
+        }
         while (!"1".equals(response) && !"2".equals(response)) {
             System.out.println("Please either select 1 or 2.");
             response = scanner.nextLine();
@@ -243,10 +246,10 @@ public class Marketplace {
             System.out.println(LOGIN_PASSWORD_PROMPT);
             String password = scanner.nextLine();
 
-            File f = new File(email);
+            File file = new File(email);
 
-            if (f.exists()) {
-                try (BufferedReader bfr = new BufferedReader(new FileReader(f))) {
+            if (file.exists()) {
+                try (BufferedReader bfr = new BufferedReader(new FileReader(file))) {
                     String line = bfr.readLine();
                     String[] firstLine = line.split(",");
                     if (password.equals(firstLine[1])) {
@@ -289,12 +292,12 @@ public class Marketplace {
             }
 
 
-            File f = new File(email);
-            while (f.exists()) {
+            File foof = new File(email);
+            while (foof.exists()) {
                 System.out.println("This username has already been taken!");
                 System.out.println(ENTER_YOUR_EMAIL);
                 email = scanner.nextLine();
-                f = new File(email);
+                foof = new File(email);
 
             }
 
@@ -333,7 +336,7 @@ public class Marketplace {
             }
 
 
-            try (BufferedWriter bwr = new BufferedWriter(new FileWriter(f))) {
+            try (BufferedWriter bwr = new BufferedWriter(new FileWriter(foof))) {
                 bwr.write(email + "," + password + "," + userType);
             } catch (IOException io) {
                 System.out.println();
@@ -360,7 +363,7 @@ public class Marketplace {
                 scanner.nextLine();
                 switch (choice) {
                     case 1:
-                        String c = "yes";
+                        String c = "";
                         do {
                             System.out.println("Enter the name of the Product you want to edit");
                             String name = scanner.nextLine();
@@ -495,7 +498,8 @@ public class Marketplace {
                         System.out.println("Enter the name of the store you would like to add:");
                         storeName = scanner.nextLine();
                         store = new Store(storeName);
-                        if (seller.addStores(store)) {
+                        if (seller.checkForStore(store.getName())) {
+                            seller.addStores(store);
                             System.out.println("Store has been added!");
 
                         } else {
@@ -506,7 +510,8 @@ public class Marketplace {
                         System.out.println("Enter the name of the store that you would like to remove:");
                         storeName = scanner.nextLine();
                         store = new Store(storeName);
-                        if (seller.removeStores(store)) {
+                        if (seller.checkForStore(store.getName())) {
+                            seller.removeStores(store);
                             System.out.println("Store has been removed");
                         } else {
                             System.out.println("Store does not exist!");
@@ -637,22 +642,15 @@ public class Marketplace {
                         case 2:
                             System.out.println("Enter the name of the item you wish to add to the cart");
                             String item = scanner.nextLine();
-                            System.out.println("Enter the name of the sstore you wish to purchase it from");
-                            String addStore = scanner.nextLine();
-                            int co2 = 0;
+
                             for (int i = 0; i < sellers.size(); i++) {
                                 for (int j = 0; j < sellers.get(i).getStores().size(); j++) {
                                     for (int k = 0; k < sellers.get(i).getStores().get(i).getProducts().size(); k++) {
-                                        if (sellers.get(i).getStores().get(i).getProducts().get(k).getName().equals(item) && sellers.get(i).getStores().get(i).getProducts().get(k).getStore().equals(addStore)) {
+                                        if (sellers.get(i).getStores().get(i).getProducts().get(k).getName().equals(item)) {
                                             customer.addToCart(sellers.get(i).getStores().get(i).getProducts().get(k));
-                                            co2 = 1;
-                                            customer.writeCart();
                                         }
                                     }
                                 }
-                            }
-                            if(co2 == 0){
-                                System.out.println("This item does not exist!");
                             }
                             break;
                         default:
