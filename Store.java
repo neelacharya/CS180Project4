@@ -5,9 +5,9 @@ public class Store {
     private ArrayList<Customers> customers;
     private ArrayList<Shoe> shoes;
     private ArrayList<String> sales;
-    
+
     private double revenue;
-    
+
     public Store(String name, ArrayList<Customers> customers, ArrayList<Shoe> shoes) {
         this.name = name;
         this.customers = customers;
@@ -106,7 +106,7 @@ public class Store {
     @Override
     public String toString(){
         //TODO
-        String s="Store Name: " + name;
+        String s="";
         for(int i = 0; i < sales.size(); i++){
             s = s + sales.get(i);
         }
