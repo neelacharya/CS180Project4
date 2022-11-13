@@ -347,9 +347,14 @@ public class Marketplace {
         String ch;
         String storeName;
         Store store;
+        Seller seller = null;
         if (userType.equals("SELLER")) {
             System.out.println("WELCOME SELLER!");
-            Seller seller = new Seller(email);
+            for (int i = 0; i < sellers.size(); i++) {
+                if (sellers.get(i).getEmail().equalsIgnoreCase(email)) {
+                    seller = new Seller(sellers.get(i).getEmail());
+                }
+            }
             // seller viewing page
             String ch1;
             do {
