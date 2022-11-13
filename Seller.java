@@ -30,19 +30,20 @@ public class Seller {
         return false;
     }
     public void addStores(Store store) {
-        try (BufferedWriter bwr = new BufferedWriter(new FileWriter(email, true))) {
-            stores.add(store);
-            for(int i = 0; i < stores.size(); i++){
-                bwr.append(stores.get(i).toString());
-                for(int j = 0; j < stores.get(i).getProducts().size(); j++){
-                    bwr.append(stores.get(i).getProducts().get(j).toString());
-                }
-            }
-            bwr.close();
-
-        } catch (IOException e) {
-            System.out.println();
-        }
+//        try (BufferedWriter bwr = new BufferedWriter(new FileWriter(email, true))) {
+//            stores.add(store);
+//            for(int i = 0; i < stores.size(); i++){
+//                bwr.append(stores.get(i).toString());
+//                for(int j = 0; j < stores.get(i).getProducts().size(); j++){
+//                    bwr.append(stores.get(i).getProducts().get(j).toString());
+//                }
+//            }
+//            bwr.close();
+//
+//        } catch (IOException e) {
+//            System.out.println();
+//        }
+        this.stores.add(store);
 
     }
 
