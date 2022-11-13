@@ -312,70 +312,71 @@ public class Marketplace {
                 scanner.nextLine();
                 switch (choice) {
                     case 1:
-                        String c = "no";
+                        String c = "yes";
                         do {
                             System.out.println("Enter the name of the Product you want to edit");
                             String name = scanner.nextLine();
+                            System.out.println("In which store would you like to edit the product?");
                             for (int i = 0; i < seller.getStores().size(); i++) {
-                                for (int j = 0; j < seller.getStores().get(i).getProducts().size(); j++) {
-                                    if (seller.getStores().get(i).getProducts().get(j).getName().equals(name)) {
-                                        System.out.println("Editing Menu");
-                                        System.out.println("1: Edit the name");
-                                        System.out.println("2: Edit the price");
-                                        System.out.println("3: Edit the description");
-                                        System.out.println("4: Edit the quantity");
-                                        System.out.println("5: Edit the store");
-                                        int choice1 = scanner.nextInt();
-                                        scanner.nextLine();
-                                        String tempName = seller.getStores().get(i).getProducts().get(j).getName();
-                                        double tempPrice = seller.getStores().get(i).getProducts().get(j).getPrice();
-                                        int tempQuan = seller.getStores().get(i).getProducts().get(j).getQuantity();
-                                        String tempDes = seller.getStores().get(i).getProducts().get(j).getDescription();
-                                        String tempStore = seller.getStores().get(i).getProducts().get(j).getStore();
-                                        switch (choice1) {
-                                            case 1:
-                                                System.out.println("Enter the new name");
-                                                String newName = scanner.nextLine();
-                                                seller.getStores().get(i).getProducts().get(j).setName(newName);
-                                                break;
-                                            case 2:
-                                                System.out.println("Enter the new price");
-                                                double newPrice = scanner.nextDouble();
-                                                scanner.nextLine();
-                                                seller.getStores().get(i).getProducts().get(j).setPrice(newPrice);
-                                                break;
-                                            case 3:
-                                                System.out.println("Enter the new description");
-                                                String newDes = scanner.nextLine();
-                                                seller.getStores().get(i).getProducts().get(j).setDescription(newDes);
-                                                break;
-                                            case 4:
-                                                System.out.println("Enter the new Store");
-                                                String newStore = scanner.nextLine();
-                                                int co = 0;
-                                                for (int k = 0; k < seller.getStores().size(); k++) {
-                                                    if (seller.getStores().get(k).getName().equals(newStore)) {
-                                                        seller.getStores().get(k).addProduct(seller.getStores().get(i).getProducts().get(j));
-                                                        seller.getStores().get(i).getProducts().get(j).setStore(newStore);
-                                                        co = 1;
-                                                        break;
-                                                    }
-                                                }
-                                                if (co != 1) {
-                                                    System.out.println("Error! Please enter the new store before adding products to it!");
-                                                }
-                                                break;
-                                            default:
-                                                System.out.println("Error! Please enter a valid choice!");
-                                        }
-                                    } else {
-                                        System.out.println("Please add the product by editing the store. You cannot add products here");
+                                System.out.println(seller.getStores().get(i).getName());
+                            }
+                            String selectedStore = scanner.nextLine();
+                            if (!seller.checkForStore(selectedStore)) {
+                                System.out.println("You are not associated with " + selectedStore);
+                            } else {
+                                Store storeToEdit = new Store(selectedStore);
+                                Shoe shoeToEdit = storeToEdit.checkForShoe(name);
+                                if (shoeToEdit == null) {
+                                    System.out.println("The shoe does not exist in the given store!");
+                                } else {
+                                    System.out.println("How would you like to edit the product?");
+                                    System.out.println("1. Edit the name:");
+                                    System.out.println("2. Edit the description: ");
+                                    System.out.println("3. Edit the quantity:");
+                                    System.out.println("4. Edit the price:");
+                                    System.out.println("5. Shift to a different store:");
+                                    int choice1 = scanner.nextInt();
+                                    scanner.nextLine();
+                                    switch(choice1) {
+                                        case 1:
+                                            System.out.println("Enter the new name of the product:");
+                                            String newName = scanner.nextLine();
+                                            seller.editProductName(storeToEdit, shoeToEdit, newName);
+                                            break;
+                                        case 2:
+                                            System.out.println("Enter the new description:");
+                                            String newDescription = scanner.nextLine();
+                                            seller.editProductDescription(storeToEdit, shoeToEdit, newDescription);
+                                            break;
+                                        case 3:
+                                            System.out.println("Enter the new quantity:");
+                                            int newQuantity = scanner.nextInt();
+                                            scanner.nextLine();
+                                            seller.editProductQuantity(shoeToEdit, storeToEdit, newQuantity);
+                                            break;
+                                        case 4:
+                                            System.out.println("Enter the new price:");
+                                            double newPrice = scanner.nextDouble();
+                                            scanner.nextLine();
+                                            seller.editProductPrice(storeToEdit, shoeToEdit, newPrice);
+                                        case 5:
+                                            System.out.println("Enter the name of the store you want to shift to:");
+                                            String newStoreName = scanner.nextLine();
+                                            if (!seller.checkForStore(newStoreName)) {
+                                                System.out.println("You are not associated with " + newStoreName);
+                                            } else {
+                                                Store newStore = new Store(newStoreName);
+                                                seller.editProductStore(shoeToEdit, storeToEdit, newStore);
+                                            }
+                                            break;
+                                        default:
+                                            System.out.println("Please enter a valid choice:");
                                     }
                                 }
                             }
                             System.out.println("Do you want to edit more (y/n)?");
                             c = scanner.nextLine();
-                        } while (c.equals("y") || c.equals("yes"));
+                        } while (c.equalsIgnoreCase("no") || c.equalsIgnoreCase("n"));
                     case 2:
                         do {
                             System.out.println("Enter the name of the store you want to edit");
@@ -421,7 +422,7 @@ public class Marketplace {
                                             System.out.println("Please enter a valid choice");
                                     }
                                 } else {
-                                    System.out.println("The store doesnt exist");
+                                    System.out.println("The store doesn't exist");
                                 }
                             }
                             System.out.println("Do you want to edit more stores?(y/n)");
@@ -483,48 +484,48 @@ public class Marketplace {
             scanner.nextLine();
             switch (choice3){
                 case 1: System.out.println("On what basis would you like ro search by?");
-                System.out.println("1. NAME");
-                System.out.println("2. PRICE");
-                System.out.println("3. STORE");
-                System.out.println("4. DESCRIPTION");
-                System.out.println("5. QUANTITY");
-                System.out.println("6. NO FILTERS, VIEW ENTIRE MARKETPLACE");
-                int choice4 = scanner.nextInt();
-                scanner.nextLine();
-                switch (choice4) {
-                    case 1:
-                        System.out.println("What is the name of the product you wish to search by:");
-                        String searchName = scanner.nextLine();
-                        searchByName(searchName);
-                        break;
-                    case 2:
-                        System.out.println("What is the threshold price of your search?");
-                        double searchPrice = scanner.nextDouble();
-                        scanner.nextLine();
-                        searchByPrice(searchPrice);
-                        break;
-                    case 3:
-                        System.out.println("What is the name of the store you would like to search in?");
-                        String searchStore = scanner.nextLine();
-                        searchByStore(searchStore);
-                        break;
-                    case 4:
-                        System.out.println("What is the description of shoe you wish to purchase?");
-                        String searchDescription = scanner.nextLine();
-                        searchByDescription(searchDescription);
-                        break;
-                    case 5:
-                        System.out.println("Displaying all the in-stock products:");
-                        sortByQuantity();
-                        break;
-                    case 6:
-                        System.out.println("Displaying the entire marketplace:");
-                        viewMarket();
-                        break;
-                    default:
-                        System.out.println("Please enter a valid choice!");
-                        break;
-                }
+                    System.out.println("1. NAME");
+                    System.out.println("2. PRICE");
+                    System.out.println("3. STORE");
+                    System.out.println("4. DESCRIPTION");
+                    System.out.println("5. QUANTITY");
+                    System.out.println("6. NO FILTERS, VIEW ENTIRE MARKETPLACE");
+                    int choice4 = scanner.nextInt();
+                    scanner.nextLine();
+                    switch (choice4) {
+                        case 1:
+                            System.out.println("What is the name of the product you wish to search by:");
+                            String searchName = scanner.nextLine();
+                            searchByName(searchName);
+                            break;
+                        case 2:
+                            System.out.println("What is the threshold price of your search?");
+                            double searchPrice = scanner.nextDouble();
+                            scanner.nextLine();
+                            searchByPrice(searchPrice);
+                            break;
+                        case 3:
+                            System.out.println("What is the name of the store you would like to search in?");
+                            String searchStore = scanner.nextLine();
+                            searchByStore(searchStore);
+                            break;
+                        case 4:
+                            System.out.println("What is the description of shoe you wish to purchase?");
+                            String searchDescription = scanner.nextLine();
+                            searchByDescription(searchDescription);
+                            break;
+                        case 5:
+                            System.out.println("Displaying all the in-stock products:");
+                            sortByQuantity();
+                            break;
+                        case 6:
+                            System.out.println("Displaying the entire marketplace:");
+                            viewMarket();
+                            break;
+                        default:
+                            System.out.println("Please enter a valid choice!");
+                            break;
+                    }
 
 
             }
@@ -544,6 +545,4 @@ public class Marketplace {
 
         // everybody work here
     }
-
-
 }
