@@ -6,7 +6,7 @@ public class Shoe {
     private String description;
     private ArrayList<String> review;
 
-    public Shoe(String name, String store, String description, int quantity, double price) {
+    public Shoe(String name, int quantity, double price, String description, String store) {
         this.name = name;
         this.store = store;
         this.description = description;
@@ -22,8 +22,8 @@ public class Shoe {
         this.review = review;
     }
 
-    public void addReview(String rev){
-        review.add(rev);
+    public void addReview(String input, String rev){
+        review.add(input + ": " + rev);
     }
 
     private int quantity;
@@ -72,7 +72,7 @@ public class Shoe {
 
     @Override
     public String toString(){
-        String s = String.format("Name: %s\nQuantity: %d\nPrice: %.2f\nDescription: %s\nStore: %s\n", this.name, this.quantity, this.description, this.store);
+        String s = String.format("Name: %s, Quantity: %d, Price: %.2f, Description: %s, Store: %s\n", this.name, this.quantity, this.description, this.store);
         if(review != null){
             s = s + "Reviews by customers: \n";
             for(int i = 0; i < review.size(); i++){
