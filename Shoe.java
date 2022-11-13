@@ -72,7 +72,7 @@ public class Shoe {
 
     @Override
     public String toString(){
-        String s = String.format("Name: %s, Quantity: %d, Price: %.2f, Description: %s, Store: %s\n", this.name, this.quantity, this.description, this.store);
+        String s = String.format("Product,%s,%d,%.2f,%s,%s\n", this.name, this.quantity, this.description, this.store);
         if(review != null){
             s = s + "Reviews by customers: \n";
             for(int i = 0; i < review.size(); i++){
