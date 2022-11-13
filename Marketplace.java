@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 import java.io.*;
 
@@ -190,21 +189,22 @@ public class Marketplace {
                 line = br.readLine();
                 sellers.add(seller);
             }
+            br.close();
 
             for (int i = 0; i < sellers.size(); i++) {
                 BufferedReader bfr = new BufferedReader(new FileReader(sellers.get(i).getEmail()));
-                String line1 = bfr.readLine();
-                while (line1 != null) {
+                String line1 = "";
+                while ((line1 = bfr.readLine()) != null) {
                     if (line1.startsWith("Store Name:")) {
-                        String[] temp = line1.split(",");
-                        Store store = new Store(temp[0]);
+                        String[] temp = line1.split(":");
+                        Store store = new Store(temp[1].trim());
                         sellers.get(i).addStores(store);
                     }
-                    if (line1.startsWith("Name:")) {
+                    if (line1.startsWith("Product")) {
                         String[] temp1 = line1.split(",");
-                        Shoe shoe = new Shoe(temp1[0], Integer.parseInt(temp1[1]), Double.parseDouble(temp1[2]), temp1[3], temp1[4]);
+                        Shoe shoe = new Shoe(temp1[1], Integer.parseInt(temp1[2]), Double.parseDouble(temp1[3]), temp1[4], temp1[5]);
                         for (int k = 0; k < sellers.get(i).getStores().size(); i++) {
-                            if (sellers.get(i).getStores().get(k).getName().equals(temp1[4])) {
+                            if (sellers.get(i).getStores().get(k).getName().equals(temp1[5])) {
                                 sellers.get(i).getStores().get(k).addProduct(shoe);
                             }
                         }
@@ -212,7 +212,6 @@ public class Marketplace {
                 }
                 bfr.close();
             }
-            br.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -298,13 +297,14 @@ public class Marketplace {
                 System.out.println(ENTER_YOUR_EMAIL);
                 email = scanner.nextLine();
                 foof = new File(email);
-
             }
 
             File file = new File("Sellers.txt");
             try {
                 PrintWriter pw = new PrintWriter(new FileWriter(file, true));
                 pw.append(email + "\n");
+                pw.flush();
+                pw.close(); // we changed this just now
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -337,7 +337,7 @@ public class Marketplace {
 
 
             try (BufferedWriter bwr = new BufferedWriter(new FileWriter(foof))) {
-                bwr.write(email + "," + password + "," + userType);
+                bwr.write(email + "," + password + "," + userType + "\n");
             } catch (IOException io) {
                 System.out.println();
             }
@@ -372,7 +372,7 @@ public class Marketplace {
                                 System.out.println(seller.getStores().get(i).getName());
                             }
                             String selectedStore = scanner.nextLine();
-                            if (!seller.checkForStore(selectedStore)) {
+                            if (!seller.checkIfStoreExists(selectedStore)) {
                                 System.out.println("You are not associated with " + selectedStore);
                             } else {
                                 Store storeToEdit = new Store(selectedStore);
@@ -413,7 +413,7 @@ public class Marketplace {
                                         case 5:
                                             System.out.println("Enter the name of the store you want to shift to:");
                                             String newStoreName = scanner.nextLine();
-                                            if (!seller.checkForStore(newStoreName)) {
+                                            if (!seller.checkIfStoreExists(newStoreName)) {
                                                 System.out.println("You are not associated with " + newStoreName);
                                             } else {
                                                 Store newStore = new Store(newStoreName);
@@ -498,19 +498,18 @@ public class Marketplace {
                         System.out.println("Enter the name of the store you would like to add:");
                         storeName = scanner.nextLine();
                         store = new Store(storeName);
-                        if (seller.checkForStore(store.getName())) {
+                        if (seller.checkIfStoreExists(store.getName())) {
+                            System.out.println("Store already exists!");
+                        } else {
                             seller.addStores(store);
                             System.out.println("Store has been added!");
-
-                        } else {
-                            System.out.println("Store already exists!");
                         }
                         break;
                     case 5:
                         System.out.println("Enter the name of the store that you would like to remove:");
                         storeName = scanner.nextLine();
                         store = new Store(storeName);
-                        if (seller.checkForStore(store.getName())) {
+                        if (seller.checkIfStoreExists(store.getName())) {
                             seller.removeStores(store);
                             System.out.println("Store has been removed");
                         } else {
