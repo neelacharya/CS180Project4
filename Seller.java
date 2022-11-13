@@ -29,23 +29,36 @@ public class Seller {
         }
         return false;
     }
-    public boolean addStores(Store store) {
-        if (stores.contains(store)) {
-            return false;
-        } else {
+    public void addStores(Store store) {
+        try (BufferedWriter bwr = new BufferedWriter(new FileWriter(email, true))) {
             stores.add(store);
-            return true;
+            for(int i = 0; i < stores.size(); i++){
+                bwr.append(stores.get(i).toString());
+                for(int j = 0; j < stores.get(i).getProducts().size(); j++){
+                    bwr.append(stores.get(i).getProducts().get(j).toString());
+                }
+            }
+            bwr.close();
+
+        } catch (IOException e) {
+            System.out.println();
         }
+
     }
 
-    public boolean removeStores(Store store) {
-        for (Store store1: stores) {
-            if (store1.equals(store)) {
-                stores.remove(store1);
-                return true;
+    public void removeStores(Store store) {
+        try (BufferedWriter bwr = new BufferedWriter(new FileWriter(email))) {
+            this.stores.remove(store);
+            for(int i = 0; i < stores.size(); i++){
+                bwr.append(stores.get(i).toString());
+                for(int j = 0; j < stores.get(i).getProducts().size(); j++){
+                    bwr.append(stores.get(i).getProducts().get(j).toString());
+                }
             }
+        } catch (IOException e) {
+            System.out.println();
         }
-        return false;
+
     }
 
     public void createProduct(Store store, Shoe shoe) {
@@ -269,6 +282,5 @@ public class Seller {
         }
     }
 }
-
 
 
