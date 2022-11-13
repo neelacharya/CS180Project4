@@ -5,19 +5,31 @@ public class Store {
     private ArrayList<Customers> customers;
     private ArrayList<Shoe> shoes;
     private ArrayList<String> sales;
+    
     private double revenue;
-
-
+    
     public Store(String name, ArrayList<Customers> customers, ArrayList<Shoe> shoes) {
         this.name = name;
         this.customers = customers;
         this.shoes = shoes;
         this.sales = new ArrayList<>();
     }
-    public Store(String name){
+
+
+    public Store(String name) {
         this.name = name;
+        this.customers = new ArrayList<>();
+        this.shoes = new ArrayList<>();
+        this.sales = new ArrayList<>();
     }
 
+    public Shoe checkForShoe(String shoeName) {
+        for(int i = 0; i < shoes.size(); i++)
+            if (shoes.get(i).getName().equalsIgnoreCase(shoeName)) {
+                return shoes.get(i);
+            }
+        return null;
+    }
 
     public void addProduct(Shoe shoe) {
         shoes.add(shoe);
@@ -33,6 +45,12 @@ public class Store {
                 shoes.set(i, shoe);
             }
         }
+    }
+
+    public boolean equals(Object o) {
+        Store p = (Store) o;
+        return (p.name.equals(name) && p.shoes.equals(shoes) && p.customers.equals(customers) &&
+                p.sales.equals(sales));
     }
 
     public void processPurchase(String shoeName, int quantity, Customers customer) {
@@ -53,9 +71,9 @@ public class Store {
 
     public void purchaseDetail(Shoe shoe, int quantity, Customers customer) {
         double revenue = shoe.getPrice() * quantity;
+        sales.add(customer.getEmail() + " bought " + quantity + " " + shoe.getName() +
+                " .Revenue generated: " + revenue );
         this.revenue += revenue;
-        sales.add(customer.getName() + " bought " + quantity + " " + shoe.getName() +
-                " .Revenue generated: " + revenue +"\n");
     }
 
     public ArrayList<Customers> getCustomers() {
