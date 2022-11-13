@@ -709,8 +709,20 @@ public class Marketplace {
                             System.out.println("You havent bought that product!!");
                         } else {
                             PrintWriter pw = new PrintWriter(new FileWriter(sellers.get(a).getEmail()));
-                            //TODO: PUT THE IMPLEMENTATION FOR UPDATING THE SELLER FILE HERE
+                            BufferedReader bfr = new BufferedReader(new FileReader(sellers.get(a).getEmail()));
+                            String first = bfr.readLine();
+                            pw.write(first + "\n");
+                            for(int i = 0; i < sellers.get(a).getStores().size(); i++){
+                                pw.append(sellers.get(a).getStores().get(i).toString() + "\n");
+                                for(int j = 0; j < sellers.get(a).getStores().get(i).getProducts().size(); i++){
+                                    pw.append(sellers.get(a).getStores().get(i).getProducts().get(j).toString() + "\n");
+                                }
+                            }
+                            pw.close();
+                            bfr.close();
                         }
+                        br.close();
+                        
                     } catch (IOException e){
                         e.printStackTrace();
                     }
