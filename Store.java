@@ -106,7 +106,7 @@ public class Store {
     @Override
     public String toString(){
         //TODO
-        String s="";
+        String s="Store Name: " + name;
         for(int i = 0; i < sales.size(); i++){
             s = s + sales.get(i);
         }
