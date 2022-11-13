@@ -21,8 +21,23 @@ public class Seller {
         return stores;
     }
 
-    public void addStores(Store store) {
-        this.stores.add(store);
+    public boolean addStores(Store store) {
+        if (stores.contains(store)) {
+            return false;
+        } else {
+            stores.add(store);
+            return true;
+        }
+    }
+    
+    public boolean removeStores(Store store) {
+        for (Store store1: stores) {
+            if (store1.equals(store)) {
+                stores.remove(store1);
+                return true;
+            }
+        }
+        return false;
     }
 
     public void createProduct(Store store, Shoe shoe) {
