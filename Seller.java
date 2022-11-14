@@ -36,6 +36,10 @@ public class Seller {
         Store store = new Store(storeName);
         this.stores.add(store);
     }
+    public void addStores(Store store) {
+        this.stores.add(store);
+    }
+
 
 
     public void createProduct(String storeName, String shoeName,
@@ -43,7 +47,8 @@ public class Seller {
         int count = 0;
         for (Store s : stores) {
             if (s.getName().equalsIgnoreCase(storeName)) {
-                s.addProduct(new Shoe(shoeName, quantity, price, description, storeName));
+                int index = stores.indexOf(s);
+                stores.get(index).addProduct(new Shoe(shoeName, quantity, price, description, storeName));
             }
             count++;
         }
@@ -57,7 +62,8 @@ public class Seller {
         for (Store s : stores) {
             if (s.getName().equalsIgnoreCase(storeName)) {
                 if (s.getProducts().size() != 0) {
-                    s.removeShoe(shoe);
+                    int index = stores.indexOf(s);
+                    stores.get(index).removeShoe(shoe);
                 } else {
                     System.out.println("There are no products in this store.");
                 }
@@ -71,49 +77,149 @@ public class Seller {
         Shoe newShoe = new Shoe(newName, newQuantity, newPrice, newDesc, storeName);
         for (Store s : stores) {
             if (s.getName().equals(storeName)) {
-                s.setProduct(oldShoe, newShoe);
+                int index = stores.indexOf(s);
+                stores.get(index).setProduct(oldShoe, newShoe);
             }
         }
 
     }
 
-    public void writeToSellerFile() {
+    public void writerToSellerFileEditProduct(String oldName, int oldQuantity, double oldPrice, String oldDesc, String storeName,
+                                              String newName, int newQuantity, double newPrice, String newDesc) {
+       removeProduct(storeName, new Shoe(oldName, oldQuantity, oldPrice, oldDesc, storeName));
+       createProduct(storeName, newName, newQuantity, newPrice, newDesc);
         ArrayList<String> otherSellers = new ArrayList<>();
-        ArrayList<String> sameSeller = new ArrayList<>();
-
+        int index = 0;
+        for (int i = 0; i < stores.size(); i++) {
+            if (stores.get(i).getName().equalsIgnoreCase(storeName)) {
+                index = i;
+            }
+        }
         try (BufferedReader bfr = new BufferedReader(new FileReader("Sellers.txt"))) {
             String line = "";
             while ((line = bfr.readLine()) != null) {
-                if (!line.startsWith(this.email)) {
+                if (!line.startsWith(this.email) || !line.contains(storeName)) {
                     otherSellers.add(line);
-                }
-
-                if (line.startsWith(this.email)) {
-                    sameSeller.add(line);
                 }
             }
             bfr.close();
         } catch (IOException e) {
             System.out.println();
         }
-
         try (BufferedWriter bwr = new BufferedWriter(new FileWriter("Sellers.txt"))) {
             for (int i = 0; i < otherSellers.size(); i++) {
                 bwr.write(otherSellers.get(i) + "\n");
             }
 
+            bwr.write(this.email + "," + stores.get(index).toString());
 
-            //            for (int i = 0; i < sameSeller.size(); i++) {
-            //                String store = sameSeller.get(i).split(",")[1];
-            //                if (stores.get(stores.size() -1).getName().equals(store)) {
-            //                    bwr.write(sameSeller.get(i) + "\n");
-            //                } /// debug
-            //            }
-
-
-            for (int i = 0; i < stores.size(); i++) {
-                bwr.write(this.email + "," + stores.get(i).toString());
+            bwr.flush();
+        } catch (IOException e) {
+            System.out.println();
+        }
+    }
+    public Store searchStore(String storeName) {
+        for (Store s : stores) {
+            if (s.getName().equalsIgnoreCase(storeName)) {
+                int index = stores.indexOf(s);
+                return stores.get(index);
             }
+        }
+        return null;
+    }
+    public void writeToSellerFileAddProduct(String storeName, String name, int quantity, double price, String description) {
+        createProduct(storeName, name, quantity, price, description);
+        ArrayList<String> otherSellers = new ArrayList<>();
+        int index = 0;
+        for (int i = 0; i < stores.size(); i++) {
+            if (stores.get(i).getName().equalsIgnoreCase(storeName)) {
+                index = i;
+            }
+        }
+        try (BufferedReader bfr = new BufferedReader(new FileReader("Sellers.txt"))) {
+            String line = "";
+            while ((line = bfr.readLine()) != null) {
+                if (!line.startsWith(this.email) || !line.contains(storeName)) {
+                    otherSellers.add(line);
+                }
+            }
+            bfr.close();
+        } catch (IOException e) {
+            System.out.println();
+        }
+        try (BufferedWriter bwr = new BufferedWriter(new FileWriter("Sellers.txt"))) {
+            for (int i = 0; i < otherSellers.size(); i++) {
+                bwr.write(otherSellers.get(i) + "\n");
+            }
+
+            bwr.write(this.email + "," + stores.get(index).toString());
+
+            bwr.flush();
+        } catch (IOException e) {
+            System.out.println();
+        }
+    }
+
+    public void writeToSellerFileRemoveProduct(String storeName, String shoeName, int quantity, double price, String description) {
+        removeProduct(storeName, new Shoe(shoeName, quantity, price, description, storeName));
+        ArrayList<String> otherSellers = new ArrayList<>();
+        int index = 0;
+        for (int i = 0; i < stores.size(); i++) {
+            if (stores.get(i).getName().equalsIgnoreCase(storeName)) {
+                index = i;
+            }
+        }
+        try (BufferedReader bfr = new BufferedReader(new FileReader("Sellers.txt"))) {
+            String line = "";
+            while ((line = bfr.readLine()) != null) {
+                if (!line.startsWith(this.email) || !line.contains(storeName)) {
+                    otherSellers.add(line);
+                }
+            }
+            bfr.close();
+        } catch (IOException e) {
+            System.out.println();
+        }
+        try (BufferedWriter bwr = new BufferedWriter(new FileWriter("Sellers.txt"))) {
+            for (int i = 0; i < otherSellers.size(); i++) {
+                bwr.write(otherSellers.get(i) + "\n");
+            }
+
+            bwr.write(this.email + "," + stores.get(index).toString());
+
+            bwr.flush();
+        } catch (IOException e) {
+            System.out.println();
+        }
+    }
+
+    public void writeToSellerFileAddStore(String storeName) {
+        ArrayList<String> otherSellers = new ArrayList<>();
+
+        /*
+        seller@gmail.com,Jordan,
+        seller@seller.com,Nike,
+        seller@seller.com,Adidas,
+         */
+        Store store = new Store(storeName);
+        try (BufferedReader bfr = new BufferedReader(new FileReader("Sellers.txt"))) {
+            String line = "";
+            while ((line = bfr.readLine()) != null) {
+                if (!line.startsWith(this.email) || !line.contains(storeName)) {
+                    otherSellers.add(line);
+                }
+            }
+            bfr.close();
+        } catch (IOException e) {
+            System.out.println();
+        }
+        try (BufferedWriter bwr = new BufferedWriter(new FileWriter("Sellers.txt"))) {
+            for (int i = 0; i < otherSellers.size(); i++) {
+                bwr.write(otherSellers.get(i) + "\n");
+            }
+
+            bwr.write(this.email + "," + store.toString() + "\n");
+
             bwr.flush();
         } catch (IOException e) {
             System.out.println();
@@ -145,6 +251,5 @@ public class Seller {
         }
     }
 }
-
 
 
