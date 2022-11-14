@@ -202,7 +202,6 @@ public class Marketplace {
                 userType = scanner.nextLine();
                 while (!"1".equals(userType) && !"2".equals(userType)) {
                     System.out.println("Please enter either 1 or 2.");
-                    userType = scanner.nextLine();
                 }
                 if ("1".equals(userType)) {
                     userType = "CUSTOMER";
@@ -263,33 +262,10 @@ public class Marketplace {
                 }
             }
         }
-        System.out.println(userType);
+        
         loadMarket();
 
-//        ArrayList<String> sellersWeWant = new ArrayList<>();
-//        try (BufferedReader bfr = new BufferedReader(new FileReader("Sellers.txt"))) {
-//            String line = "";
-//            ArrayList<String> arr = new ArrayList<>();
-//            while ((line = bfr.readLine()) != null) {
-//                arr.add(line);
-//            }
-//            for (int i = 0; i < arr.size(); i++) {
-//                String[] array = arr.get(i).split(",");
-//                if (array.length >= 2) {
-//                    sellersWeWant.add(arr.get(i));
-//                }
-//            }
-//        } catch (IOException e) {
-//            System.out.println("Error reading to the sellers file.");
-//        }
 
-//        try (BufferedWriter bwr = new BufferedWriter(new FileWriter("Sellers.txt"))) {
-//            for (int i = 0; i < sellersWeWant.size(); i++) {
-//                bwr.write(sellersWeWant.get(i) + "\n");
-//            }
-//        } catch (IOException e) {
-//            System.out.println("Error writing to the sellers file.");
-//        }
 
 
         if (userType.equals("SELLER")) {
@@ -306,9 +282,7 @@ public class Marketplace {
                     break;
                 }
             }
-            for (int i = 0; i < sellers.size(); i++) {
-                System.out.println("!" + sellers.get(i).getEmail() + "!");
-            }
+            
 
 
             String performActivity = "";
@@ -737,3 +711,4 @@ public class Marketplace {
 
     }
 }
+
