@@ -202,6 +202,7 @@ public class Marketplace {
                 userType = scanner.nextLine();
                 while (!"1".equals(userType) && !"2".equals(userType)) {
                     System.out.println("Please enter either 1 or 2.");
+                    userType = scanner.nextLine();
                 }
                 if ("1".equals(userType)) {
                     userType = "CUSTOMER";
@@ -736,4 +737,3 @@ public class Marketplace {
 
     }
 }
-
