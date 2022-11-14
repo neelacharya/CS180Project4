@@ -1,10 +1,10 @@
 import java.util.ArrayList;
 import java.io.*;
 
-public class Customers {
+public class Customer {
     private ArrayList<Shoe> shoppingCart = new ArrayList<>();
 
-    public Customers(String email) {
+    public Customer(String email) {
         this.email = email;
     }
 
