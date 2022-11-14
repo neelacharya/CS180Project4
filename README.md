@@ -1,8 +1,8 @@
 # Happy Feet #
-- [Description](##Description "Goto Description")
-- [Classes](##Classes "Goto Classes")
-- [Files](##Files "Goto Files")
-- [Testing](##Testing "Goto Testing")
+- [Description](#description "Goto Description")
+- [Classes](#classes "Goto Classes")
+- [Files](#files "Goto Files")
+- [Testing](#testing "Goto Testing")
 ## Description ##
 ## Classes ##
 ## Files ##
