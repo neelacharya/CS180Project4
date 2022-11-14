@@ -1,3 +1,5 @@
+import jdk.jshell.spi.ExecutionControl;
+
 import java.util.ArrayList;
 import java.io.*;
 
@@ -38,8 +40,8 @@ public class Customer {
             for (int i = 0; i < shoppingCart.size(); i++) {
                 System.out.println(shoppingCart.get(i).toString());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println("There is nothing in your shopping cart.");
         }
     }
 
