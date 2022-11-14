@@ -2,16 +2,26 @@ import java.util.ArrayList;
 
 public class Shoe {
     private String name;
-    private String store;
+    private String storeName;
     private String description;
     private ArrayList<String> review;
 
-    public Shoe(String name, int quantity, double price, String description, String store) {
+    public Shoe(String name, int quantity, double price, String description, String storeName) {
         this.name = name;
-        this.store = store;
+        this.storeName = storeName;
         this.description = description;
         this.quantity = quantity;
         this.price = price;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Shoe) {
+            return (((Shoe) o).getName().equals(this.name) && ((Shoe) o).getQuantity() == this.quantity && ((Shoe) o).getPrice()
+                    == this.price && ((Shoe) o).getDescription().equals(this.description)
+                    && ((Shoe) o).getStore().equals(this.storeName));
+        }
+        return false;
     }
 
     public ArrayList<String> getReview() {
@@ -38,11 +48,11 @@ public class Shoe {
     }
 
     public String getStore() {
-        return this.store;
+        return this.storeName;
     }
 
-    public void setStore(String store) {
-        this.store = store;
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
     }
 
 
@@ -72,13 +82,7 @@ public class Shoe {
 
     @Override
     public String toString(){
-        String s = String.format("Product,%s,%d,%.2f,%s,%s\n", this.name, this.quantity, this.description, this.store);
-        if(review != null){
-            s = s + "Reviews by customers: \n";
-            for(int i = 0; i < review.size(); i++){
-                s = s + review.get(i) + "\n";
-            }
-        }
-        return s;
+        return String.format("%s,%d,%.2f,%s,%s", this.name, this.quantity, this.price, this.description, this.storeName);
     }
+
 }
