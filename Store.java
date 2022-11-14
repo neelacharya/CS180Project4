@@ -2,13 +2,13 @@ import java.util.ArrayList;
 
 public class Store {
     private String name;
-    private ArrayList<Customers> customers;
+    private ArrayList<Customer> customers;
     private ArrayList<Shoe> shoes;
     private ArrayList<String> sales = new ArrayList<>();
 
     private double revenue;
 
-    public Store(String name, ArrayList<Customers> customers, ArrayList<Shoe> shoes) {
+    public Store(String name, ArrayList<Customer> customers, ArrayList<Shoe> shoes) {
         this.name = name;
         this.customers = customers;
         this.shoes = shoes;
@@ -51,7 +51,7 @@ public class Store {
                 p.sales.equals(sales));
     }
 
-    public void processPurchase(String shoeName, int quantity, Customers customer) {
+    public void processPurchase(String shoeName, int quantity, Customer customer) {
         for (Shoe shoe: shoes) {
             if (shoe.getName().equalsIgnoreCase(shoeName)) {
                 if (quantity <= shoe.getQuantity()) {
@@ -67,14 +67,14 @@ public class Store {
         }
     }
 
-    public void purchaseDetail(Shoe shoe, int quantity, Customers customer) {
+    public void purchaseDetail(Shoe shoe, int quantity, Customer customer) {
         double revenue = shoe.getPrice() * quantity;
         sales.add(customer.getEmail() + " bought " + quantity + " " + shoe.getName() +
                 " .Revenue generated: " + revenue );
         this.revenue += revenue;
     }
 
-    public ArrayList<Customers> getCustomers() {
+    public ArrayList<Customer> getCustomers() {
         return customers;
     }
 
@@ -82,7 +82,7 @@ public class Store {
         return sales;
     }
 
-    public void setCustomers(ArrayList<Customers> customers) {
+    public void setCustomers(ArrayList<Customer> customers) {
         this.customers = customers;
     }
     public ArrayList<Shoe> getProducts() {
