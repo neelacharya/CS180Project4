@@ -1,8 +1,10 @@
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.Scanner;
 import java.io.*;
+import java.util.function.BiFunction;
 
-public class Marketplace {
+public class Login {
     public static final String WELCOME_PROMPT = "Welcome to our Marketplace!";
     public static final String ENTER_YOUR_EMAIL = "Please enter your e-mail.";
     public static final String SIGN_IN_PROMPT = "1: Sign In\n2: Create an account.";
@@ -15,278 +17,177 @@ public class Marketplace {
 
     private static ArrayList<Seller> sellers = new ArrayList<>();
 
-    public static void sortByQuantity() {
-        File f = new File("market.txt");
+    /*public static void loadMarket() {
+        File f = new File("Sellers.txt");
         if (f.exists()) {
             try (BufferedReader bfr = new BufferedReader(new FileReader(f))) {
-                ArrayList<String> prices = new ArrayList<>();
                 String line = "";
+
+                Seller seller = new Seller("");
                 while ((line = bfr.readLine()) != null) {
                     String[] arr = line.split(",");
-                    int quantity = Integer.parseInt(arr[1]);
-                    if (quantity != 0) {
-                        prices.add(line);
+                    if (arr.length > 2) {
+                        boolean no = false;
+                        int index = sellers.size();
+                        for (int i = 0; i < sellers.size(); i++) {
+                            if (arr[0].equals(sellers.get(i).getEmail())) {
+                                no = true;
+                                index = i;
+                            }
+                        }
+
+                        if (!no) {
+                            seller = new Seller(arr[0]);
+                            sellers.add(seller);
+                        }
+                        Store store = new Store(arr[1]);
+                        for (int i = 2; i < arr.length; i+=5) {
+                            Shoe shoe = new Shoe(arr[i], Integer.parseInt(arr[i+1]),
+                                    Double.parseDouble(arr[i+2]), arr[i+3], arr[i+4]);
+
+                            store.addProduct(shoe);
+                            //System.out.println(store.getProducts().toString());
+                        }
+                        for(int i =0; i < store.getProducts().size(); i++){
+                            System.out.println(store.getProducts().get(i).toString());
+                        }
+                        seller.addStores(store.getName());
+                        sellers.set(index, seller);
+                    } else {
+                        /**
+                         * WE HOPE THIS FUCKING WORKS REMEMBER IT!!!!!!!
+
+                        boolean no = false;
+                        int index = sellers.size();
+                        for (int i = 0; i < sellers.size(); i++) {
+                            if (arr[0].equals(sellers.get(i).getEmail())) {
+                                no = true;
+                                index = i;
+                            }
+                        }
+
+                        if (!no) {
+                            seller = new Seller(arr[0]);
+                            sellers.add(seller);
+                        }
+                        Store store = new Store(arr[1]);
+                        seller.addStores(store.getName());
+                        sellers.set(index, seller);
                     }
                 }
-                for (int i = 0; i < prices.size(); i++) {
-                    String s = prices.get(i).replaceAll(",", ", ");
-                    System.out.println("Product " + (i + 1) + " " + s);
+                for(int i = 0; i < sellers.size(); i++){
+                    for(int j = 0; j < sellers.get(i).getStores().size(); j++){
+                        System.out.println(sellers.get(i).getStores().toString());
+                    }
                 }
-
-            } catch (Exception e) {
-                System.out.println("Error searching the market.");
+                //sellers.add(new Seller(""));
+            } catch (IOException e) {
+                System.out.println("Error reading to the sellers file.");
             }
         } else {
-            System.out.println("There are no products on the market.");
-        }
-    }
-
-    public static void searchByPrice(double threshold) {
-        File f = new File("market.txt");
-        if (f.exists()) {
-            try (BufferedReader bfr = new BufferedReader(new FileReader(f))) {
-                ArrayList<String> prices = new ArrayList<>();
-                String line = "";
-                while ((line = bfr.readLine()) != null) {
-                    String[] arr = line.split(",");
-                    double price = Double.parseDouble(arr[2]);
-                    if (price < threshold) {
-                        prices.add(line);
-                    }
-                }
-                if (prices.size() == 0) {
-                    System.out.println("There were no matches to your search.");
-                } else {
-                    for (int i = 0; i < prices.size(); i++) {
-                        String s = prices.get(i).replaceAll(",", ", ");
-                        System.out.println("Product " + (i + 1) + " " + s);
-                    }
-                }
-            } catch (Exception e) {
-                System.out.println("Error searching the market.");
+            try  {
+                boolean b = f.createNewFile();
+            } catch (IOException e) {
+                System.out.println("There was an error creating the sellers file.");
             }
-        } else {
-            System.out.println("There are no products on the market.");
         }
 
-    }
-
-    public static void searchByDescription(String description) {
-        File f = new File("market.txt");
-        if (f.exists()) {
-            try (BufferedReader bfr = new BufferedReader(new FileReader(f))) {
-                ArrayList<String> descriptions = new ArrayList<>();
-                String line = "";
-                while ((line = bfr.readLine()) != null) {
-                    String[] arr = line.split(",");
-                    if (arr[3].contains(description)) {
-                        descriptions.add(line);
-                    }
-                }
-                if (descriptions.size() == 0) {
-                    System.out.println("There were no matches to your search.");
-                } else {
-                    for (int i = 0; i < descriptions.size(); i++) {
-                        String s = descriptions.get(i).replaceAll(",", ", ");
-                        System.out.println("Product " + (i + 1) + " " + s);
-                    }
-                }
-            } catch (Exception e) {
-                System.out.println("Error searching the market.");
-            }
-        } else {
-            System.out.println("There are no products on the market.");
-        }
-    }
-
-    public static void searchByName(String name) {
-        File f = new File("market.txt");
-        if (f.exists()) {
-            try (BufferedReader bfr = new BufferedReader(new FileReader(f))) {
-                ArrayList<String> names = new ArrayList<>();
-                String line = "";
-                while ((line = bfr.readLine()) != null) {
-                    String[] arr = line.split(",");
-                    if (arr[0].contains(name)) {
-                        names.add(line);
-                    }
-                }
-                if (names.size() == 0) {
-                    System.out.println("There were no matches to your search.");
-                } else {
-                    for (int i = 0; i < names.size(); i++) {
-                        String s = names.get(i).replaceAll(",", ", ");
-                        System.out.println("Product " + (i + 1) + " " + s);
-                    }
-                }
-            } catch (Exception e) {
-                System.out.println("Error searching the market.");
-            }
-        } else {
-            System.out.println("There are no products on the market.");
-        }
-
-    }
-
-    public static void searchByStore(String store) {
-        File f = new File("market.txt");
-        if (f.exists()) {
-            try (BufferedReader bfr = new BufferedReader(new FileReader(f))) {
-                ArrayList<String> storeNames = new ArrayList<>();
-                String line = "";
-                while ((line = bfr.readLine()) != null) {
-                    String[] arr = line.split(",");
-                    if (arr[4].contains(store)) {
-                        storeNames.add(line);
-                    }
-                }
-                if (storeNames.size() == 0) {
-                    System.out.println("There were no matches to your search.");
-                } else {
-                    for (int i = 0; i < storeNames.size(); i++) {
-                        String s = storeNames.get(i).replaceAll(",", ", ");
-                        System.out.println("Product " + (i + 1) + " " + s);
-                    }
-                }
-            } catch (Exception e) {
-                System.out.println("Error searching the market.");
-            }
-        } else {
-            System.out.println("There are no products on the market.");
-        }
-
-    }
-
-
-    public static void viewMarket() {
-        File f = new File("market.txt");
-        if (f.exists()) {
-            try (BufferedReader bfr = new BufferedReader(new FileReader(f))) {
-                String line = "";
-                ArrayList<String> overallProducts = new ArrayList<>();
-                while ((line = bfr.readLine()) != null) {
-                    overallProducts.add(line);
-                }
-                for (int i = 0; i < overallProducts.size(); i++) {
-                    System.out.println("Product " + (i + 1) + ":" + overallProducts.get(i));
-                }
-            } catch (Exception e) {
-                System.out.println();
-            }
-        } else {
-            System.out.println("There are no products on the market.");
-        }
-
-    }
+    }*/
 
     public static void loadMarket() {
         File f = new File("Sellers.txt");
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(f));
-            String line = "";
-            while ((line = br.readLine()) != null) {
-                Seller seller = new Seller(line);
-                sellers.add(seller);
-            }
-            br.close();
-            System.out.println(sellers.size());
-            if (sellers.size() != 0) {
-                for (int i = 0; i < sellers.size(); i++) {
-                    BufferedReader bfr = new BufferedReader(new FileReader(sellers.get(i).getEmail()));
-                    String line1 = "";
-                    Seller p = new Seller(sellers.get(i).getEmail());
-                    Store store = new Store("");
-                    while ((line1 = bfr.readLine()) != null) {
-                        if (line1.startsWith("Store Name:")) {
-                            if (!store.getName().equals("")) {
-                                p.addStores(store);
-                            }
-                            String[] temp = line1.split(":");
-                            store = new Store(temp[1].trim());
-                        }
-                        if (line1.startsWith("Product")) {
-                            String[] temp1 = line1.split(",");
-                            Shoe shoe = new Shoe(temp1[1], Integer.parseInt(temp1[2]), Double.parseDouble(temp1[3]), temp1[4], temp1[5]);
-                            store.addProduct(shoe);
-                        }
+        if (f.exists()) {
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(f));
+                String line = br.readLine();
+                while (line != null) {
+                    String[] temp = line.split(",");
+                    Seller seller = new Seller(temp[0]);
+                    seller.addStores(temp[1]);
+                    sellers.add(seller);
+                    for (int i = 2; i < temp.length; i += 5) {
+                        seller.getStores().get(seller.getStores().size() - 1).addProduct(new Shoe(temp[i], Integer.parseInt(temp[i + 1]), Double.parseDouble(temp[i + 2]), temp[i + 3], temp[i + 4]));
                     }
-                    sellers.set(i, p);
-                    bfr.close();
+                    line = br.readLine();
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
 
     public static void main(String[] args) {
+        loadMarket();
+        System.out.println("few");
+        for (int i = 0; i < sellers.size(); i++) {
+            System.out.println(sellers.get(i).getEmail());
+            for (int j = 0; j < sellers.get(i).getStores().size(); j++) {
+                System.out.println(sellers.get(i).getStores().get(j).toString());
+                for (int k = 0; k < sellers.get(i).getStores().get(j).getProducts().size(); k++) {
+                    System.out.println(sellers.get(i).getStores().get(j).getProducts().get(k).toString());
+                }
+            }
+        }
+        String email = "";
+        String password = "";
+        String userType = "";
         Scanner scanner = new Scanner(System.in);
         System.out.println(WELCOME_PROMPT);
         System.out.println(SIGN_IN_PROMPT);
         String response = scanner.nextLine();
-        File f = new File("Sellers.txt");
-        if(f.exists()) {
-            loadMarket();
-        }
+
+
         while (!"1".equals(response) && !"2".equals(response)) {
             System.out.println("Please either select 1 or 2.");
             response = scanner.nextLine();
         }
 
-        String userType = "";
-        String email = "";
 
-        // global variables
-
-
-        if ("1".equals(response)) { // if they want to sign in
+        if ("1".equals(response)) { // sign in
             System.out.println(ENTER_YOUR_EMAIL);
             email = scanner.nextLine();
 
             System.out.println(LOGIN_PASSWORD_PROMPT);
-            String password = scanner.nextLine();
+            password = scanner.nextLine();
 
-            File file = new File(email);
-
-            if (file.exists()) {
-                try (BufferedReader bfr = new BufferedReader(new FileReader(file))) {
-                    String line = bfr.readLine();
-                    String[] firstLine = line.split(",");
-                    if (password.equals(firstLine[1])) {
-                        System.out.println("Login Successful.");
-                    } else {
-                        boolean validPassword = false;
-                        while (!validPassword) { // case of invalid password
-                            System.out.println("Wrong password.");
-                            System.out.println(LOGIN_PASSWORD_PROMPT);
-                            password = scanner.nextLine();
-                            if (password.equals(firstLine[1])) {
-                                validPassword = true;
-                                System.out.println("Login Successful.");
-                            }
-
-                        }
-                    }
-                    if (firstLine[2].equals("CUSTOMER")) {
-                        userType = "CUSTOMER";
-                    } else {
-                        userType = "SELLER";
-                    }
-
-                } catch (IOException io) {
-                    System.out.println();
+            File f = new File("Accounts.txt");
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(f));
+                ArrayList<String> accountInfo = new ArrayList<>();
+                String line = "";
+                while ((line = br.readLine()) != null) {
+                    accountInfo.add(line);
                 }
-            } else {
-                System.out.println("We have not detected an account in our system based on that information.");
+                br.close();
+                ArrayList<String> emails = new ArrayList<>();
+                for (int i = 0; i < accountInfo.size(); i++) {
+                    emails.add(accountInfo.get(i).split(",")[0]);
+                }
+                while (!emails.contains(email)) {
+                    System.out.println("This e-mail does not exist in our database.");
+                    System.out.println(ENTER_YOUR_EMAIL);
+                    email = scanner.nextLine();
+                }
+                int index = emails.indexOf(email);
+                while (!accountInfo.get(index).split(",")[1].equals(password)) {
+                    System.out.println("Incorrect Password.");
+                    System.out.println(LOGIN_PASSWORD_PROMPT);
+                    password = scanner.nextLine();
+                }
+                System.out.println("Login successful!");
+
+
+                if (accountInfo.get(index).split(",")[2].equals("SELLER")) {
+                    userType = "SELLER";
+                } else {
+                    userType = "BUYER";
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
-
-        } else { // if they want to create an account
+        } else { // create account
             System.out.println(ENTER_YOUR_EMAIL);
             email = scanner.nextLine();
 
@@ -296,250 +197,218 @@ public class Marketplace {
                 email = scanner.nextLine();
             }
 
+            File f = new File("Accounts.txt");
+            if (f.exists()) {
+                try (BufferedReader bfr = new BufferedReader(new FileReader("Accounts.txt"))) {
+                    String line = "";
+                    while ((line = bfr.readLine()) != null) {
+                        String[] arr = line.split(",");
+                        while (arr[0].equals(email)) {
+                            System.out.println("This e-mail has already been taken.");
+                            System.out.println(ENTER_YOUR_EMAIL);
+                            email = scanner.nextLine();
+                        }
+                    }
+                } catch (IOException e) {
+                    System.out.println("Unable to read to the accounts file.");
+                }
 
-            File foof = new File(email);
-            while (foof.exists()) {
-                System.out.println("This username has already been taken!");
-                System.out.println(ENTER_YOUR_EMAIL);
-                email = scanner.nextLine();
-                foof = new File(email);
-            }
-
-            File file = new File("Sellers.txt");
-            try {
-                PrintWriter pw = new PrintWriter(new FileWriter(file, true));
-                pw.append(email + "\n");
-                pw.flush();
-                pw.close(); // we changed this just now
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            System.out.println(CREATE_PASSWORD_PROMPT);
-            String password = scanner.nextLine();
-
-
-            if (password == null || password.length() <= 5) { // case of invalid password
-                boolean validPassword = false;
-                while (!validPassword) {
-                    System.out.println("Invalid password. Please enter a valid Password:");
-                    password = scanner.nextLine();
-                    if (password != null && password.length() > 5) {
-                        validPassword = true;
+                System.out.println(CREATE_PASSWORD_PROMPT);
+                password = scanner.nextLine();
+                if (password == null || password.length() <= 5) { // case of invalid password
+                    boolean validPassword = false;
+                    while (!validPassword) {
+                        System.out.println("Invalid password. Please enter a valid Password:");
+                        password = scanner.nextLine();
+                        if (password != null && password.length() > 5) {
+                            validPassword = true;
+                        }
                     }
                 }
-            }
 
-            System.out.println(BUYER_OR_SELLER);
-            userType = scanner.nextLine();
-            while (!"1".equals(userType) && !"2".equals(userType)) {
-                System.out.println("Please enter either 1 or 2.");
-            }
-            if ("1".equals(userType)) {
-                userType = "CUSTOMER";
+                System.out.println(BUYER_OR_SELLER);
+                userType = scanner.nextLine();
+                while (!"1".equals(userType) && !"2".equals(userType)) {
+                    System.out.println("Please enter either 1 or 2.");
+                }
+                if ("1".equals(userType)) {
+                    userType = "CUSTOMER";
+                } else {
+                    userType = "SELLER";
+                    Seller seller = new Seller(email);
+                    sellers.add(seller); // hope it works
+                }
+
+
+                try (BufferedWriter bwr = new BufferedWriter(new FileWriter("Accounts.txt", true))) {
+                    bwr.write(email + "," + password + "," + userType + "\n");
+                } catch (IOException io) {
+                    System.out.println("Error writing to the accounts file.");
+                }
             } else {
-                userType = "SELLER";
-                Seller seller = new Seller(email);
-                sellers.add(seller); // hope it works
+                f = new File("Accounts.txt");
+                System.out.println(CREATE_PASSWORD_PROMPT);
+                password = scanner.nextLine();
+                if (password == null || password.length() <= 5) { // case of invalid password
+                    boolean validPassword = false;
+                    while (!validPassword) {
+                        System.out.println("Invalid password. Please enter a valid Password:");
+                        password = scanner.nextLine();
+                        if (password != null && password.length() > 5) {
+                            validPassword = true;
+                        }
+                    }
+                }
+
+                System.out.println(BUYER_OR_SELLER);
+                userType = scanner.nextLine();
+                while (!"1".equals(userType) && !"2".equals(userType)) {
+                    System.out.println("Please enter either 1 or 2.");
+                }
+                if ("1".equals(userType)) {
+                    userType = "CUSTOMER";
+                } else {
+                    userType = "SELLER";
+                    Seller seller = new Seller(email);
+                    sellers.add(seller); // hope it works
+                }
+                try (BufferedWriter bwr = new BufferedWriter(new FileWriter("Accounts.txt", true))) {
+                    bwr.write(email + "," + password + "," + userType + "\n");
+                } catch (IOException e) {
+                    System.out.println("Error writing to the accounts file.");
+                }
             }
-
-
-            try (BufferedWriter bwr = new BufferedWriter(new FileWriter(foof))) {
-                bwr.write(email + "," + password + "," + userType + "\n");
-            } catch (IOException io) {
-                System.out.println();
-            }
-
-
-
         }
-        String ch;
-        String storeName;
-        Store store;
+
+
         if (userType.equals("SELLER")) {
+            Seller s = new Seller(email);
             int index = 0;
+            if (sellers.size() == 1) {
+                sellers.set(0, s);
+                index = sellers.indexOf(s);
+            }
+
             for (int i = 0; i < sellers.size(); i++) {
-                if (sellers.get(i).getEmail().equalsIgnoreCase(email)) {
+                if (sellers.get(i).getEmail().equals(email)) {
                     index = i;
                     break;
                 }
             }
 
-            System.out.println("WELCOME SELLER!");
-            // seller viewing page
-            String ch1;
+
+            String performActivity = "";
             do {
+                /**
+                 * below are the general variables we will use in your menu
+                 */
+                // ____________
+                String storeName = "";
+
+                // ____________
                 System.out.println("Menu");
-                System.out.println("1: Edit a Product");
-                System.out.println("2: Edit a Store");
-                System.out.println("3: View the store and its details");
-                System.out.println("4: Add a store");
-                System.out.println("5: Remove a Store");
+                System.out.println("1: Add a store");
+                System.out.println("2: Add a product one of your Stores");
+                System.out.println("3: Remove a product from one of your Stores");
+                System.out.println("4: Edit a product from one of your Stores");
+                System.out.println("5: View your stores and their details");
+                System.out.println("6: View a customer shopping cart");
                 int choice = scanner.nextInt();
                 scanner.nextLine();
                 switch (choice) {
                     case 1:
-                        String c = "";
-                        do {
-                            System.out.println("Enter the name of the Product you want to edit");
-                            String name = scanner.nextLine();
-                            System.out.println("In which store would you like to edit the product?");
-                            for (int i = 0; i < sellers.get(index).getStores().size(); i++) {
-                                System.out.println(sellers.get(index).getStores().get(i).getName());
-                            }
-                            String selectedStore = scanner.nextLine();
-                            if (!sellers.get(index).checkIfStoreExists(selectedStore)) {
-                                System.out.println("You are not associated with " + selectedStore);
-                            } else {
-                                Store storeToEdit = new Store(selectedStore);
-                                Shoe shoeToEdit = storeToEdit.checkForShoe(name);
-                                if (shoeToEdit == null) {
-                                    System.out.println("The shoe does not exist in the given store!");
-                                } else {
-                                    System.out.println("How would you like to edit the product?");
-                                    System.out.println("1. Edit the name:");
-                                    System.out.println("2. Edit the description: ");
-                                    System.out.println("3. Edit the quantity:");
-                                    System.out.println("4. Edit the price:");
-                                    System.out.println("5. Shift to a different store:");
-                                    int choice1 = scanner.nextInt();
-                                    scanner.nextLine();
-                                    switch (choice1) {
-                                        case 1:
-                                            System.out.println("Enter the new name of the product:");
-                                            String newName = scanner.nextLine();
-                                            sellers.get(index).editProductName(storeToEdit, shoeToEdit, newName);
-                                            break;
-                                        case 2:
-                                            System.out.println("Enter the new description:");
-                                            String newDescription = scanner.nextLine();
-                                            sellers.get(index).editProductDescription(storeToEdit, shoeToEdit, newDescription);
-                                            break;
-                                        case 3:
-                                            System.out.println("Enter the new quantity:");
-                                            int newQuantity = scanner.nextInt();
-                                            scanner.nextLine();
-                                            sellers.get(index).editProductQuantity(shoeToEdit, storeToEdit, newQuantity);
-                                            break;
-                                        case 4:
-                                            System.out.println("Enter the new price:");
-                                            double newPrice = scanner.nextDouble();
-                                            scanner.nextLine();
-                                            sellers.get(index).editProductPrice(storeToEdit, shoeToEdit, newPrice);
-                                        case 5:
-                                            System.out.println("Enter the name of the store you want to shift to:");
-                                            String newStoreName = scanner.nextLine();
-                                            if (!sellers.get(index).checkIfStoreExists(newStoreName)) {
-                                                System.out.println("You are not associated with " + newStoreName);
-                                            } else {
-                                                Store newStore = new Store(newStoreName);
-                                                sellers.get(index).editProductStore(shoeToEdit, storeToEdit, newStore);
-                                            }
-                                            break;
-                                        default:
-                                            System.out.println("Please enter a valid choice:");
-                                    }
-                                }
-                            }
-                            System.out.println("Do you want to edit more (y/n)?");
-                            c = scanner.nextLine();
-                        } while (c.equalsIgnoreCase("no") || c.equalsIgnoreCase("n"));
+                        System.out.println("What is the name of the store you would like to add?");
+                        storeName = scanner.nextLine();
+                        sellers.get(index).addStores(storeName);
+                        sellers.get(index).writeToSellerFile();
+                        break;
                     case 2:
-                        do {
-                            System.out.println("Enter the name of the store you want to edit");
-                            String editName = scanner.nextLine();
-                            for (int i = 0; i < sellers.get(index).getStores().size(); i++) {
-                                if (sellers.get(index).getStores().get(i).getName().equals(editName)) {
-                                    System.out.println("Edit Menu");
-                                    System.out.println("1: Change the name of the store");
-                                    System.out.println("2: Add a product to the store");
-                                    System.out.println("3: Remove a product from the store");
-                                    int choice2 = scanner.nextInt();
-                                    scanner.nextLine();
-                                    switch (choice2) {
-                                        case 1:
-                                            System.out.println("Enter the new name of the store");
-                                            String newName = scanner.nextLine();
-                                            sellers.get(index).getStores().get(i).setName(newName);
-                                            break;
-                                        case 2:
-                                            System.out.println("Enter the name of the product");
-                                            String pName = scanner.nextLine();
-                                            System.out.println("Enter the price of the product");
-                                            double pPrice = scanner.nextDouble();
-                                            scanner.nextLine();
-                                            System.out.println("Enter the description of the product");
-                                            String pDes = scanner.nextLine();
-                                            System.out.println("Enter the quantity of the product");
-                                            int pQuan = scanner.nextInt();
-                                            scanner.nextLine();
-                                            Shoe shoe = new Shoe(pName, pQuan, pPrice, pDes, editName);
-                                            sellers.get(index).getStores().get(i).addProduct(shoe);
-                                            break;
-                                        case 3:
-                                            System.out.println("Enter the name of the product that is to be removed");
-                                            String remName = scanner.nextLine();
-                                            for (int j = 0; j < sellers.get(index).getStores().get(i).getProducts().size(); j++) {
-                                                if (sellers.get(index).getStores().get(i).getProducts().get(i).getName().equals(remName)) {
-                                                    sellers.get(index).getStores().get(i).removeProduct(sellers.get(index).getStores().get(i).getProducts().get(i));
-                                                }
-                                            }
-                                            break;
-                                        default:
-                                            System.out.println("Please enter a valid choice");
-                                    }
-                                } else {
-                                    System.out.println("The store doesn't exist");
-                                }
-                            }
-                            System.out.println("Do you want to edit more stores?(y/n)");
-                            ch = scanner.nextLine();
-                        } while (ch.equals("y") || ch.equals("yes"));
+                        System.out.println("What is the name of the store you would like to add a shoe to?");
+                        storeName = scanner.nextLine();
+                        if (sellers.get(index).checkIfStoreExists(storeName)) {
+                            System.out.println("What is the name of your shoe?");
+                            String shoeName = scanner.nextLine();
+                            System.out.println("How many shoes do you want to manufacture?");
+                            int quantity = scanner.nextInt();
+                            scanner.nextLine();
+                            System.out.println("What will the price of your shoe be?");
+                            double price = scanner.nextDouble();
+                            scanner.nextLine();
+                            System.out.println("What is the description of your shoe?");
+                            String description = scanner.nextLine();
+                            sellers.get(index).createProduct(storeName, shoeName, quantity, price, description);
+                            sellers.get(index).writeToSellerFile();
+                        } else {
+                            System.out.println("Sorry, you are not affiliated with " + storeName);
+                        }
                         break;
                     case 3:
-                        do {
-                            System.out.println("Enter the name of the store");
-                            String nameStore = scanner.nextLine();
-                            for (int i = 0; i < sellers.get(index).getStores().size(); i++) {
-                                if (sellers.get(index).getStores().get(i).getName().equals(nameStore)) {
-                                    System.out.println(sellers.get(index).getStores().get(i).toString());
-                                }
-                            }
-                            System.out.println("Would you like to view another store?");
-                            ch = scanner.nextLine();
-                        } while (ch.equals("y") || ch.equals("yes"));
-
+                        System.out.println("What is the name of the store you would to remove a shoe from?");
+                        storeName = scanner.nextLine();
+                        if (sellers.get(index).checkIfStoreExists(storeName)) {
+                            System.out.println("What is the name of your shoe?");
+                            String shoeName = scanner.nextLine();
+                            System.out.println("How many shoes do you want to manufacture?");
+                            int quantity = scanner.nextInt();
+                            scanner.nextLine();
+                            System.out.println("What will the price of your shoe be?");
+                            double price = scanner.nextDouble();
+                            scanner.nextLine();
+                            System.out.println("What is the description of your shoe?");
+                            String description = scanner.nextLine();
+                            Shoe shoe = new Shoe(shoeName, quantity, price, description, storeName);
+                            sellers.get(index).removeProduct(storeName, shoe);
+                            sellers.get(index).writeToSellerFile();
+                        }
                         break;
                     case 4:
-                        System.out.println("Enter the name of the store you would like to add:");
+                        System.out.println("What is the name of the store you would like to edit a shoe from?");
                         storeName = scanner.nextLine();
-                        store = new Store(storeName);
-                        if (sellers.get(index).checkIfStoreExists(store.getName())) {
-                            System.out.println("Store already exists!");
-                        } else {
-                            sellers.get(index).addStores(store);
-                            System.out.println("Store has been added!");
+                        if (sellers.get(index).checkIfStoreExists(storeName)) {
+                            System.out.println("What is the name of your old shoe?");
+                            String shoeName = scanner.nextLine();
+                            System.out.println("What was the quantity of the old shoes");
+                            int quantity = scanner.nextInt();
+                            scanner.nextLine();
+                            System.out.println("What was the price of the old shoe");
+                            double price = scanner.nextDouble();
+                            scanner.nextLine();
+                            System.out.println("What is the description of the old shoe");
+                            String description = scanner.nextLine();
+                            Shoe oldShoe = new Shoe(shoeName, quantity, price, description, storeName);
+
+                            System.out.println("What is the name of your old shoe?");
+                            String newShoeName = scanner.nextLine();
+                            System.out.println("What was the quantity of the old shoes");
+                            int newQuantity = scanner.nextInt();
+                            scanner.nextLine();
+                            System.out.println("What was the price of the old shoe");
+                            double newPrice = scanner.nextDouble();
+                            scanner.nextLine();
+                            System.out.println("What is the description of the old shoe");
+                            String newDescription = scanner.nextLine();
+                            sellers.get(index).editProduct(oldShoe, newShoeName, newDescription, storeName, newQuantity, newPrice);
+                            sellers.get(index).writeToSellerFile();
                         }
                         break;
                     case 5:
-                        System.out.println("Enter the name of the store that you would like to remove:");
-                        storeName = scanner.nextLine();
-                        store = new Store(storeName);
-                        if (sellers.get(index).checkIfStoreExists(store.getName())) {
-                            sellers.get(index).removeStores(store);
-                            System.out.println("Store has been removed");
-                        } else {
-                            System.out.println("Store does not exist!");
+                        for (Store store : sellers.get(index).getStores()) {
+                            System.out.println(store.toString());
                         }
                         break;
+                    case 6:
+                        System.out.println("This doesn't fucking work dumbass.");
+                        break;
                     default:
-                        System.out.println("Please enter a valid choice!");
+                        System.out.println("YOOOOOO");
                 }
-                System.out.println("Would you like to perform any other activity?(y/n)");
-                ch1 = scanner.nextLine();
+                System.out.println("Would you like to perform another activity?");
+                performActivity = scanner.nextLine();
 
-            } while (ch1.equals("y") || ch1.equals("yes"));
-            // end of seller implementation...
+            } while ("Yes".equalsIgnoreCase(performActivity) || "y".equalsIgnoreCase(performActivity));
+            /**
+             * END OF SELLER IMPLEMENTATION
+             */
 
         } else if (userType.equals("CUSTOMER")) {
             System.out.println("WELCOME CUSTOMER!");
@@ -566,31 +435,77 @@ public class Marketplace {
                         case 1:
                             System.out.println("What is the name of the product you wish to search by:");
                             String searchName = scanner.nextLine();
-                            searchByName(searchName);
+                            for (int i = 0; i < sellers.size(); i++) {
+                                for (int j = 0; j < sellers.get(i).getStores().size(); j++) {
+                                    for (int k = 0; k < sellers.get(i).getStores().get(j).getProducts().size(); k++) {
+                                        if (sellers.get(i).getStores().get(j).getProducts().get(k).getName().equals(searchName)) {
+                                            System.out.println(sellers.get(i).getStores().get(j).getProducts().get(k).toString());
+                                        }
+                                    }
+                                }
+                            }
                             break;
                         case 2:
                             System.out.println("What is the threshold price of your search?");
                             double searchPrice = scanner.nextDouble();
                             scanner.nextLine();
-                            searchByPrice(searchPrice);
+                            for (int i = 0; i < sellers.size(); i++) {
+                                for (int j = 0; j < sellers.get(i).getStores().size(); j++) {
+                                    for (int k = 0; k < sellers.get(i).getStores().get(j).getProducts().size(); k++) {
+                                        if (sellers.get(i).getStores().get(j).getProducts().get(k).getPrice() < searchPrice) {
+                                            System.out.println(sellers.get(i).getStores().get(j).getProducts().get(k).toString());
+                                        }
+                                    }
+                                }
+                            }
                             break;
                         case 3:
                             System.out.println("What is the name of the store you would like to search in?");
                             String searchStore = scanner.nextLine();
-                            searchByStore(searchStore);
+                            for (int i = 0; i < sellers.size(); i++) {
+                                for (int j = 0; j < sellers.get(i).getStores().size(); j++) {
+                                    for (int k = 0; k < sellers.get(i).getStores().get(j).getProducts().size(); k++) {
+                                        if (sellers.get(i).getStores().get(j).getProducts().get(k).getStore().equals(searchStore)) {
+                                            System.out.println(sellers.get(i).getStores().get(j).getProducts().get(k).toString());
+                                        }
+                                    }
+                                }
+                            }
                             break;
                         case 4:
                             System.out.println("What is the description of shoe you wish to purchase?");
                             String searchDescription = scanner.nextLine();
-                            searchByDescription(searchDescription);
+                            for (int i = 0; i < sellers.size(); i++) {
+                                for (int j = 0; j < sellers.get(i).getStores().size(); j++) {
+                                    for (int k = 0; k < sellers.get(i).getStores().get(j).getProducts().size(); k++) {
+                                        if (sellers.get(i).getStores().get(j).getProducts().get(k).getDescription().equals(searchDescription)) {
+                                            System.out.println(sellers.get(i).getStores().get(j).getProducts().get(k).toString());
+                                        }
+                                    }
+                                }
+                            }
                             break;
                         case 5:
                             System.out.println("Displaying all the in-stock products:");
-                            sortByQuantity();
+                            for(int i = 0; i < sellers.size(); i++){
+                                for(int j = 0; j < sellers.get(i).getStores().size(); j++){
+                                    for(int k = 0; k < sellers.get(i).getStores().get(j).getProducts().size(); k++){
+                                        if(sellers.get(i).getStores().get(j).getProducts().get(k).getQuantity() > 0){
+                                            System.out.println(sellers.get(i).getStores().get(j).getProducts().get(k).toString());
+                                        }
+                                    }
+                                }
+                            }
                             break;
                         case 6:
                             System.out.println("Displaying the entire marketplace:");
-                            viewMarket();
+                            for (int i = 0; i < sellers.size(); i++) {
+                                for (int j = 0; j < sellers.get(i).getStores().size(); j++) {
+                                    for (int k = 0; k < sellers.get(i).getStores().get(j).getProducts().size(); k++) {
+                                        System.out.println(sellers.get(i).getStores().get(j).getProducts().get(k).toString());
+                                    }
+                                }
+                            }
                             break;
                         default:
                             System.out.println("Please enter a valid choice!");
@@ -620,6 +535,7 @@ public class Marketplace {
                                     if (trip) {
                                         cart.add(line);
                                     }
+                                    line = br.readLine();
                                 }
                                 ArrayList<Shoe> passCart = new ArrayList<>();
                                 for (int i = 0; i < cart.size(); i++) {
@@ -695,23 +611,23 @@ public class Marketplace {
                     System.out.println("Enter the name of the store you bought it from");
                     String storebought = scanner.nextLine();
                     try {
-                        int a=0,b=0,c=0;
+                        int a = 0, b = 0, c = 0;
                         boolean trip = false;
                         BufferedReader br = new BufferedReader(new FileReader(customer.getEmail()));
                         String line2 = br.readLine();
-                        while(line2 != null){
+                        while (line2 != null) {
                             String[] temp = line2.split(",");
-                            if(temp[0].equals("Name: " + productName) && temp[4].equals("Store: " + storebought)){
+                            if (temp[0].equals("Name: " + productName) && temp[4].equals("Store: " + storebought)) {
                                 trip = true;
                             }
-                            if(trip){
+                            if (trip) {
                                 System.out.println("Enter the review you would like to send");
                                 String review = scanner.nextLine();
 
-                                for(int i = 0; i < sellers.size(); i++){
-                                    for(int j = 0; j < sellers.get(i).getStores().size(); j++){
-                                        for(int k = 0; k < sellers.get(i).getStores().get(i).getProducts().size(); k++){
-                                            if(sellers.get(i).getStores().get(i).getProducts().get(i).getName().equals(productName) && sellers.get(i).getStores().get(i).getProducts().get(i).getStore().equals(storebought)){
+                                for (int i = 0; i < sellers.size(); i++) {
+                                    for (int j = 0; j < sellers.get(i).getStores().size(); j++) {
+                                        for (int k = 0; k < sellers.get(i).getStores().get(i).getProducts().size(); k++) {
+                                            if (sellers.get(i).getStores().get(i).getProducts().get(i).getName().equals(productName) && sellers.get(i).getStores().get(i).getProducts().get(i).getStore().equals(storebought)) {
                                                 sellers.get(i).getStores().get(i).getProducts().get(i).addReview(customer.getEmail(), review);
                                                 a = i;
                                                 b = j;
@@ -722,19 +638,20 @@ public class Marketplace {
                                     }
                                 }
                             }
+                            line2 = br.readLine();
 
                         }
 
-                        if(!trip){
+                        if (!trip) {
                             System.out.println("You havent bought that product!!");
                         } else {
                             PrintWriter pw = new PrintWriter(new FileWriter(sellers.get(a).getEmail()));
                             BufferedReader bfr = new BufferedReader(new FileReader(sellers.get(a).getEmail()));
                             String first = bfr.readLine();
                             pw.write(first + "\n");
-                            for(int i = 0; i < sellers.get(a).getStores().size(); i++){
+                            for (int i = 0; i < sellers.get(a).getStores().size(); i++) {
                                 pw.append(sellers.get(a).getStores().get(i).toString() + "\n");
-                                for(int j = 0; j < sellers.get(a).getStores().get(i).getProducts().size(); i++){
+                                for (int j = 0; j < sellers.get(a).getStores().get(i).getProducts().size(); i++) {
                                     pw.append(sellers.get(a).getStores().get(i).getProducts().get(j).toString() + "\n");
                                 }
                             }
@@ -743,7 +660,7 @@ public class Marketplace {
                         }
                         br.close();
 
-                    } catch (IOException e){
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
 
@@ -751,18 +668,22 @@ public class Marketplace {
             }
             // customer viewing page
         }
-        //close the file readers
-        /*
-        Present our product listing page
-        format should be:
-        store1, productName1, price1
-        store2, productName2, price2
-        The marketplace listing page will show the store, product name, and price of the available goods.
-        Customers can select a specific product to be taken to that product's page, which will include a description and the quantity available.
-        When items are purchased, the quantity available for all users decreases by the amount being purchased.
-         */
 
 
-        // everybody work here
     }
+
+
+    /*public static void writeToSellerFile(){
+        try {
+            PrintWriter pw = new PrintWriter(new FileWriter("Sellers.txt"));
+            for (int i = 0; i < sellers.size(); i++) {
+                for (int j = 0; j < sellers.get(i).getStores().size(); j++) {
+                    pw.append(sellers.get(i).getEmail() + "," + sellers.get(i).getStores().get(j).toString());
+                }
+            }
+            pw.close();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }*/
 }
