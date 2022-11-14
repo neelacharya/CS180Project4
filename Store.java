@@ -105,9 +105,10 @@ public class Store {
     public String toString() {
         String s = this.name + ",";
         for (int i = 0; i < shoes.size(); i++) {
-                s.concat(shoes.get(i).toString() + ",");
+            s += shoes.get(i).toString() + ",";
+
         }
-        return s + "\n";
+        return s;
 
     }
 }
